@@ -11,10 +11,6 @@ const voteSchema = new Schema({
         type: Date,
         default: Date.now
     }
-}, {
-    // We disable the _id field for sub-documents unless specifically needed,
-    // as it can add unnecessary overhead.
-    _id: false 
 });
 
 module.exports = voteSchema;
