@@ -4,7 +4,7 @@ const voteSchema = require('./votesmodel');
 
 const userSchema = new Schema({
     // Corresponds to the SQL PRIMARY KEY. Indexed and unique for fast lookups.
-    fakeId: {
+    userId: {
         type: Number,
         required: true,
         unique: true,
