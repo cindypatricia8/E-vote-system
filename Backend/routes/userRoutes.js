@@ -5,12 +5,14 @@ const userController = require('../controllers/userController');
 // CRUD Routes for User
 router.get('/', userController.getAllUsers);
 
-router.get('/:id', userController.getUserById);
-
 router.post('/', userController.createUser);
 
-router.put('/:id', userController.updateUser);
+router.get('/:userId', userController.getUserById);
 
-router.delete('/:id', userController.deleteUser);
+router.put('/:userId', userController.updateUser);
+
+router.delete('/:userId', userController.deleteUser);
+
+router.post('/:userId/votes', userController.addUserVote)
 
 module.exports = router;
