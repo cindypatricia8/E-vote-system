@@ -9,10 +9,19 @@ body {
   height: 1024px;
   background: rgba(255,255,255,1);
   opacity: 1;
-  position: absolute;
   top: 0px;
   left: 0px;
-  overflow: hidden;
+}
+.v6_24 {
+  width: 934px;
+  color: rgba(0,0,0,1);
+  position: absolute;
+  top: 105px;
+  left: 840px;
+  font-family: Inter;
+  font-weight: Regular;
+  font-size: 20px;
+  opacity: 1;
 }
 .v6_25 {
   width: 587px;
@@ -20,39 +29,35 @@ body {
   background: rgba(217,217,217,1);
   opacity: 1;
   position: absolute;
-  top: 224px;
-  left: 402px;
+  top: 100px;
+  left: 802px;
   border-top-left-radius: 50px;
   border-top-right-radius: 50px;
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
-  overflow: hidden;
+  
 }
-.v1_3 {
+.SignIn {
   width: 129px;
   color: rgba(0,0,0,1);
   position: absolute;
   top: 412px;
-  left: 631px;
+  left: 1050px;
   font-family: Lao Muang Khong;
   font-weight: Regular;
   font-size: 30px;
   opacity: 1;
-  text-align: left;
 }
-.v5_12 {
-  width: 126px;
-  color: rgba(156,150,150,1);
-  position: absolute;
-  top: 652px;
-  left: 438px;
-  font-family: Inter;
-  font-weight: Regular;
-  font-size: 15px;
-  opacity: 1;
-  text-align: left;
+.remember-row {
+  display: flex;
+  align-items: left;
+  gap: 5px;              /* space between checkbox and text */
+  margin: 8px 0 16px;    /* spacing around the row */
+  margin-top: 170px;
+  user-select: none;
+  font-family: Lao Muang Khong;
 }
-.v6_23 {
+.userForm {
   width: 587px;
   height: 182px;
   background: url("../images/v6_23.png");
@@ -63,53 +68,51 @@ body {
   position: absolute;
   top: 460px;
   left: 402px;
-  overflow: hidden;
+  
 }
-.v5_7 {
+.EmailText {
   width: 144px;
   color: rgba(0,0,0,1);
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 10px;
+  left: 402px;
   font-family: Inter;
   font-weight: Regular;
   font-size: 20px;
   opacity: 1;
   text-align: left;
 }
-.v5_10 {
+.PasswordText {
   width: 195px;
   color: rgba(0,0,0,1);
   position: absolute;
-  top: 93px;
-  left: 0px;
+  top: 100px;
+  left: 402px;
   font-family: Inter;
   font-weight: Regular;
   font-size: 20px;
   opacity: 1;
   text-align: left;
 }
-.v5_8 {
+.EmailBox input {
   width: 586px;
   height: 41px;
   background: rgba(255,255,255,1);
   opacity: 1;
   position: absolute;
   top: 41px;
-  left: 0px;
+  left: 402px;
   border: 0.30000001192092896px solid rgba(16,15,15,1);
-  overflow: hidden;
 }
-.v5_9 {
+.PasswordBox input{
   width: 586px;
   height: 41px;
   background: rgba(255,255,255,1);
   opacity: 1;
   position: absolute;
-  top: 140px;
-  left: 0px;
+  top: 130px;
+  left: 402px;
   border: 0.30000001192092896px solid rgba(0,0,0,1);
-  overflow: hidden;
 }
 .v6_15 {
   width: 15px;
@@ -120,7 +123,7 @@ body {
   top: 653px;
   left: 415px;
   border: 0.699999988079071px solid rgba(156,151,151,1);
-  overflow: hidden;
+
 }
 .v6_17 {
   width: 324px;
@@ -158,18 +161,6 @@ body {
   opacity: 1;
   text-align: left;
 }
-.v6_24 {
-  width: 934px;
-  color: rgba(0,0,0,1);
-  position: absolute;
-  top: 232px;
-  left: 446px;
-  font-family: Inter;
-  font-weight: Regular;
-  font-size: 20px;
-  opacity: 1;
-  text-align: left;
-}
 .v6_37 {
   width: 307px;
   height: 58px;
@@ -182,7 +173,7 @@ body {
   border-top-right-radius: 1px;
   border-bottom-left-radius: 1px;
   border-bottom-right-radius: 1px;
-  overflow: hidden;
+  
 }
 .v6_38 {
   width: 113px;
@@ -205,9 +196,8 @@ body {
   background-size: cover;
   opacity: 1;
   position: absolute;
-  top: 230px;
-  left: 415px;
-  overflow: hidden;
+  top: 107px;
+  left: 810px;
 }
 .v19_2 {
   width: 404px;
@@ -220,5 +210,23 @@ body {
   position: absolute;
   top: 283px;
   left: 471px;
-  overflow: hidden;
+  
 }
+
+.success-banner {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border: 1px solid #b7eb8f;
+  background: #f6ffed;
+  color: #135200;
+  border-radius: 8px;
+}
+.error-banner {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border: 1px solid #ffa39e;
+  background: #fff1f0;
+  color: #a8071a;
+  border-radius: 8px;
+}
+
