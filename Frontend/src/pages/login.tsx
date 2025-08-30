@@ -52,11 +52,21 @@ export default function Login() {
     <div className="v1_2">
       <div className="v6_25"></div>
       <span className="v6_24">Sign in with your Account to Access Monash Portal Apps</span>
+      <div className="v19_2"></div>
       <span className="SignIn">Sign In</span>
       <div className="v14_11"></div>
-      {/*<span className="RememberMe">Remember me</span>*/}
-      
-      {/* ✅ Success + error banners */}
+      <div className="v6_15"></div>
+        <a href="/forgot-password" className="v6_17">Forgot Password</a>
+        <a href="/signup" className="v6_20">Sign Up</a>
+        <span className="v6_19">Don’t have an account? </span>
+        
+        <div className="v6_37">
+          <button type="submit" className="primary-btn" disabled={submitting}>
+            {submitting ? "Signing In..." : "Sign In"}
+          </button>
+        </div>
+        
+      {/* Success or error message */}
       {success && (
         <div className="success-banner" role="status" aria-live="polite">
           {success}
@@ -101,19 +111,8 @@ export default function Login() {
 
         {errors.general && <div className="error-banner">{errors.general}</div>}
 
-        <div className="v6_15"></div>
-        <a href="/forgot-password" className="v6_17">Forgot Password</a>
-        <a href="/signup" className="v6_20">Sign Up</a>
-        <span className="v6_19">Don’t have an account? </span>
         
-        <div className="v6_37">
-          <button type="submit" className="primary-btn" disabled={submitting}>
-            {submitting ? "Signing In..." : "Sign In"}
-          </button>
-        </div>
-
         <span className="v6_38" aria-hidden="true">Sign In</span>
-        <div className="v19_2"></div>
       </form>
     </div>
   );

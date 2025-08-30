@@ -41,7 +41,7 @@ body {
   width: 129px;
   color: rgba(0,0,0,1);
   position: absolute;
-  top: 412px;
+  top: 350px;
   left: 1050px;
   font-family: Lao Muang Khong;
   font-weight: Regular;
@@ -50,11 +50,12 @@ body {
 }
 .remember-row {
   display: flex;
-  align-items: left;
+  align-items: center;
   gap: 5px;              /* space between checkbox and text */
   margin: 8px 0 16px;    /* spacing around the row */
-  margin-top: 170px;
-  user-select: none;
+  margin-top: 180px;
+  margin-left: 400px;
+  user-select: none;  
   font-family: Lao Muang Khong;
 }
 .userForm {
@@ -123,14 +124,13 @@ body {
   top: 653px;
   left: 415px;
   border: 0.699999988079071px solid rgba(156,151,151,1);
-
 }
 .v6_17 {
   width: 324px;
   color: rgba(48,89,213,1);
   position: absolute;
-  top: 678px;
-  left: 415px;
+  top: 660px;
+  left: 805px;
   font-family: Inter;
   font-weight: Regular;
   font-size: 15px;
@@ -161,19 +161,20 @@ body {
   opacity: 1;
   text-align: left;
 }
-.v6_37 {
+.v6_37 button{
   width: 307px;
   height: 58px;
   background: rgba(47,114,207,0.8799999952316284);
   opacity: 1;
   position: absolute;
-  top: 711px;
-  left: 526px;
+  top: 700px;
+  left: 954px;
+  color: white;
   border-top-left-radius: 1px;
   border-top-right-radius: 1px;
   border-bottom-left-radius: 1px;
   border-bottom-right-radius: 1px;
-  
+
 }
 .v6_38 {
   width: 113px;
@@ -208,11 +209,10 @@ body {
   background-size: cover;
   opacity: 1;
   position: absolute;
-  top: 283px;
-  left: 471px;
+  top: 200px;
+  left: 871px;
   
 }
-
 .success-banner {
   margin: 8px 0;
   padding: 10px 12px;
