@@ -38,7 +38,7 @@ const userSchema = new Schema({
         type: String,
         enum: ['UG', 'PG']
     },
-    phone: { // Renamed from FakePhone
+    phone: { 
         type: String
     },
     
