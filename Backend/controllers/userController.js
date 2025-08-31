@@ -1,110 +1,148 @@
-const userQuery = require('../queries/userQueries');
+const userQueries = require('../queries/userQueries');
+const jwt = require('jsonwebtoken');
 
-// Get all users
+/**
+ * Generates a JSON Web Token for a given user ID.
+ * @param {string} id - The user's MongoDB ObjectId.
+ * @returns {string} The generated JWT.
+ */
+const generateToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+};
+
+/**
+ * Handles user registration.
+ * Expects studentId, email, password, and name in the request body.
+ */
+const registerUser = async (req, res) => {
+    try {
+        const { studentId, email, password, name } = req.body;
+
+        if (!studentId || !email || !password || !name) {
+            return res.status(400).json({ message: 'Please provide all required fields: studentId, email, password, and name.' });
+        }
+
+        // Create user
+        const newUser = await userQueries.createUser({
+            studentId,
+            email,
+            name,
+            passwordHash: password, 
+        });
+
+        // Generate login token
+        const token = generateToken(newUser._id);
+
+        res.status(201).json({
+            status: 'success',
+            token,
+            data: {
+                user: newUser,
+            },
+        });
+    } catch (error) {
+        // MongoDB duplicate error 
+        if (error.code === 11000) {
+            return res.status(409).json({ message: 'A user with that Student ID or Email already exists.' });
+        }
+        res.status(500).json({ message: 'Error registering user.', error: error.message });
+    }
+};
+
+/**
+ * Handles user login.
+ * Expects studentId and password in the request body.
+ */
+const loginUser = async (req, res) => {
+    try {
+        const { studentId, password } = req.body;
+
+        if (!studentId || !password) {
+            return res.status(400).json({ message: 'Please provide a student ID and password.' });
+        }
+
+        const user = await userQueries.findUserByStudentId(studentId);
+
+        if (!user || !(await user.comparePassword(password))) {
+            return res.status(401).json({ message: 'Invalid student ID or password.' });
+        }
+
+        const token = generateToken(user._id);
+
+        user.passwordHash = undefined;
+
+        res.status(200).json({
+            status: 'success',
+            token,
+            data: {
+                user,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error logging in.', error: error.message });
+    }
+};
+
+/**
+ * Gets the profile of the currently logged-in user.
+ */
+const getUserProfile = async (req, res) => {
+    const user = await userQueries.findUserById(req.user.id);
+
+    if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+    }
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user,
+        },
+    });
+};
+
+/**
+ * Gets all users.
+ */
+const getAllUsers = async (req, res) => {
+    try {
+        const users = await userQueries.getAllUsers();
+        res.status(200).json({
+            status: 'success',
+            results: users.length,
+            data: {
+                users,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching users.', error: error.message });
+    }
+};
+
+/**
+ * Deletes a user.
+ */
+const deleteUser = async (req, res) => {
+    try {
+        const user = await userQueries.deleteUser(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        res.status(204).json({ // 204 No Content
+            status: 'success',
+            data: null,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting user.', error: error.message });
+    }
+};
+
 module.exports = {
-    getAllUsers: async (req, res) => {
-        try {
-            const users = await userQuery.getAllUsers();
-            res.status(200).json(users);
-        } catch (error) {
-            res.status(500).json({ message: 'Error fetching users', error });
-        }
-    },
-
-    // Get user by ID 
-    getUserById: async (req, res) => {
-        try {
-            const user = await userQuery.getUserById(req.params.id);
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            res.status(200).json(user);
-        } catch (error) {
-            res.status(500).json({ message: 'Error fetching user', error });
-        }
-    },
-    // Create a new user
-    createUser: async (req, res) => {
-        try {
-            const userData = req.body;
-            if (!userData || Object.keys(userData).length === 0) {
-                return res.status(400).json({ message: 'User data cannot be empty.' });
-            }
-            const newUser = await userQueries.createUser(userData);
-            res.status(201).json(newUser); // 201 Created
-        } catch (error) {
-            // Duplicate key error catch
-            if (error.code === 11000) {
-                return res.status(409).json({ message: `User with userId ${req.body.userId} already exists.` }); // 409 Conflict
-            }
-            res.status(500).json({ message: 'Error creating user', error: error.message });
-        }
-    },
-    // Update user by ID
-    updateUser: async (req, res) => {
-        try {
-            const userId = parseInt(req.params.userId);
-            if (isNaN){
-                return res.status(400).json({ message: "User ID must be a number"})
-            }
-
-            const updateData = req.body;
-            if (!updateData || Object.keys(updateData).length === 0) {
-                return res.status(400).json({ message: 'Update data cannot be empty.' });
-            }
-
-            const updatedUser = await userQuery.updateUser(req.params.id, req.body);
-            if (!updatedUser) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-
-            res.status(200).json(updatedUser);
-        } catch (error) {
-            res.status(500).json({ message: 'Error updating user', error });
-        }
-    },
-    // Delete user by ID
-    deleteUser: async (req, res) => {
-        try {
-            const userId = parseInt(req.params.userId);
-            if (isNaN(userId)) {
-                return res.status(400).json({ message: 'User ID must be a number.' });
-            }
-
-            const deletedUser = await userQuery.deleteUser(req.params.id);
-            if (!deletedUser) {
-                return res.status(404).json({ message: 'User not found' });
-            }
-            res.status(200).json({ message: 'User deleted successfully' });
-        } catch (error) {
-            res.status(500).json({ message: 'Error deleting user', error });
-        }
-    },
-
-    addUserVote: async (req, res) => {
-        try {
-            const userId = parseInt(req.params.userId);
-            const { electionType } = req.body;
-
-            if (isNaN(userId)) {
-                return res.status(400).json({ message: 'User ID must be a number.' });
-            }
-            if (!electionType) {
-                return res.status(400).json({ message: 'Election type is required.' });
-            }
-
-            const updatedUser = await userQueries.addVoteToUser(userId, electionType);
-            if (!updatedUser) {
-                return res.status(404).json({ message: `User with ID ${userId} not found.` });
-            }
-            res.status(200).json(updatedUser);
-        } catch (error) {
-            // Handle the specific "already voted" error from the query
-            if (error.message.includes('already voted')) {
-                return res.status(409).json({ message: error.message }); // 409 Conflict
-            }
-            res.status(500).json({ message: 'Error adding vote', error: error.message });
-        }
-    },
-
+    registerUser,
+    loginUser,
+    getUserProfile,
+    getAllUsers,
+    deleteUser,
 };
