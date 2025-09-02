@@ -1,18 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const { protect, restrictTo } = require('../middleware/authMiddleware');
 
-// CRUD Routes for User
-router.get('/', userController.getAllUsers);
+// Public routes
+router.post('/register', userController.registerUser);
+router.post('/login', userController.loginUser);
 
-router.post('/', userController.createUser);
+// Protected routes (requires user to be logged in)
+router.get('/profile', protect, userController.getUserProfile);
 
-router.get('/:userId', userController.getUserById);
-
-router.put('/:userId', userController.updateUser);
-
-router.delete('/:userId', userController.deleteUser);
-
-router.post('/:userId/votes', userController.addUserVote)
+// Admin-only routes
+router.get('/', protect, restrictTo('systemAdmin'), userController.getAllUsers);
+router.delete('/:id', protect, restrictTo('systemAdmin'), userController.deleteUser);
 
 module.exports = router;
