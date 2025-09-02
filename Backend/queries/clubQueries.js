@@ -1,4 +1,7 @@
 const Club = require('../models/clubModel');
+const Election = require('../models/electionModel');
+const Ballot = require('../models/ballotModel');
+
 
 /**
  * Creates a new club.
@@ -141,6 +144,36 @@ const isUserClubMember = async (clubId, userId) => {
     }
 };
 
+/**
+ * Deletes a club and deletes it's associated elections and ballots.
+ * @param {string} clubId - The ID of the club to delete.
+ * @returns {Promise<object|null>} The deleted club document or null if not found.
+ */
+const deleteClubAndCascade = async (clubId) => {
+
+    // Find club to be deleted by ID
+    const club = await Club.findById(clubId);
+    if (!club) return null;
+
+    //  Find IDs of all elections associated with this club
+    const elections = await Election.find({ clubId: clubId }).select('_id');
+    const electionIds = elections.map(e => e._id);
+
+    if (electionIds.length > 0) {
+        // Delete all ballots linked to those elections
+        await Ballot.deleteMany({ electionId: { $in: electionIds } });
+
+        // Delete all the elections
+        await Election.deleteMany({ _id: { $in: electionIds } });
+    }
+
+    // Delete the club itself
+    await Club.findByIdAndDelete(clubId);
+    
+    return club;
+};
+
+
 
 module.exports = {
     createClub,
@@ -151,4 +184,5 @@ module.exports = {
     addMemberToClub,
     removeMemberFromClub,
     isUserClubMember,
+    deleteClubAndCascade
 };
