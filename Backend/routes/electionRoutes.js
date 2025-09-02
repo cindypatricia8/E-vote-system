@@ -6,7 +6,7 @@ const { protect } = require('../middleware/authMiddleware');
 // All election routes require a user to be logged in
 router.use(protect);
 
-router.post('/', electionController.createElection); // Permissions (clubAdmin) checked inside controller
+router.post('/', electionController.createElection); // Permissions checked inside controller
 router.get('/active', electionController.getActiveElections);
 
 router.route('/:id')
