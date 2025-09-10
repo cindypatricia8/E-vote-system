@@ -1,26 +1,90 @@
 import axios from 'axios';
-import type { User, NewUserPayload, UpdateUserPayload } from '../types';
+import type {
+    AuthResponse, UserRegistrationPayload, LoginPayload, Club,
+    Election, VoteSelectionPayload, ElectionResultsResponse, User
+} from '../types';
 
-const API_URL = 'http://localhost:3000/api/users';
+// Create a configured instance of Axios
+const api = axios.create({
+    baseURL: 'http://localhost:3000/api', // backend url 
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});
 
-// --- User API Calls ---
+// Axios Request Interceptor
+// It retrieves the token from localStorage and adds it to the Authorization header.
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
-export const fetchUsers = () => axios.get<User[]>(API_URL);
+// AUTHENTICATION API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-export const getUserById = (userId: number) => axios.get<User>(`${API_URL}/${userId}`);
+export const registerUser = (userData: UserRegistrationPayload) =>
+    api.post<AuthResponse>('/users/register', userData);
 
-export const createUser = (userData: NewUserPayload) => {
-  return axios.post<User>(API_URL, userData);
-};
+export const loginUser = (credentials: LoginPayload) =>
+    api.post<AuthResponse>('/users/login', credentials);
 
-export const updateUser = (userId: number, updateData: UpdateUserPayload) => {
-  return axios.put<User>(`${API_URL}/${userId}`, updateData);
-};
+export const getUserProfile = () =>
+    api.get<{ status: 'success', data: { user: User } }>('/users/profile');
 
-export const deleteUser = (userId: number) => axios.delete(`${API_URL}/${userId}`);
 
-// --- Vote API Calls ---
-export const addUserVote = (userId: number, electionType: string) => {
-  const voteUrl = `${API_URL}/${userId}/votes`;
-  return axios.post<User>(voteUrl, { electionType });
+// CLUB API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+export const createClub = (clubData: { name: string; description?: string }) =>
+    api.post<{ status: 'success', data: { club: Club } }>('/clubs', clubData);
+
+export const getAllClubs = () =>
+    api.get<{ status: 'success', results: number, data: { clubs: Club[] } }>('/clubs');
+
+export const getClubById = (clubId: string) =>
+    api.get<{ status: 'success', data: { club: Club } }>(`/clubs/${clubId}`);
+
+export const addMemberToClub = (clubId: string, userId: string) =>
+    api.post<{ status: 'success', data: { club: Club } }>(`/clubs/${clubId}/members`, { userId });
+
+export const removeMemberFromClub = (clubId: string, memberId: string) =>
+    api.delete<{ status: 'success', data: { club: Club } }>(`/clubs/${clubId}/members/${memberId}`);
+
+
+// ELECTION API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+export const createElection = (electionData: Omit<Election, '_id' | 'clubId' | 'createdAt' | 'updatedAt' | 'status'> & { clubId: string }) =>
+    api.post<{ status: 'success', data: { election: Election } }>('/elections', electionData);
+
+export const getActiveElections = () =>
+    api.get<{ status: 'success', results: number, data: { elections: Election[] } }>('/elections/active');
+
+export const getElectionById = (electionId: string) =>
+    api.get<{ status: 'success', data: { election: Election } }>(`/elections/${electionId}`);
+
+
+// VOTE API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+export const castVote = (electionId: string, selections: VoteSelectionPayload[]) =>
+    api.post<{ status: 'success', message: string }>(`/vote/election/${electionId}/cast`, { selections });
+
+export const getElectionResults = (electionId: string) =>
+    api.get<ElectionResultsResponse>(`/vote/election/${electionId}/results`);
+
+
+// TOKEN MANAGEMENT =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// Functions for authentication 
+
+export const setAuthToken = (token: string | null) => {
+    if (token) {
+        localStorage.setItem('authToken', token);
+    } else {
+        localStorage.removeItem('authToken');
+    }
 };
