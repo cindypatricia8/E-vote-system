@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type {
     AuthResponse, UserRegistrationPayload, LoginPayload, Club,
-    Election, VoteSelectionPayload, ElectionResultsResponse, User
+    Election, VoteSelectionPayload, ElectionResultsResponse, User, UpdateProfilePayload,
 } from '../types';
 
 // Create a configured instance of Axios
@@ -27,7 +27,7 @@ api.interceptors.request.use(
     }
 );
 
-// AUTHENTICATION API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+// USER API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 export const registerUser = (userData: UserRegistrationPayload) =>
     api.post<AuthResponse>('/users/register', userData);
@@ -38,6 +38,8 @@ export const loginUser = (credentials: LoginPayload) =>
 export const getUserProfile = () =>
     api.get<{ status: 'success', data: { user: User } }>('/users/profile');
 
+export const updateUserProfile = (updateData: UpdateProfilePayload) =>
+    api.put<{ status: 'success', data: { user: User } }>('/users/profile', updateData);
 
 // CLUB API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
