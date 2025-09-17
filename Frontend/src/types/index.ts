@@ -13,6 +13,9 @@ export interface UserRegistrationPayload {
   email: string;
   password: string;
   name: string;
+  faculty?: string;
+  gender?: string;
+  yearOfStudy?: number;
 }
 
 export interface LoginPayload {
@@ -34,6 +37,13 @@ export interface User {
   votedInElections: string[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface UpdateProfilePayload {
+    name?: string;
+    faculty?: string;
+    gender?: string;
+    yearOfStudy?: number;
 }
 
 export interface Club {
