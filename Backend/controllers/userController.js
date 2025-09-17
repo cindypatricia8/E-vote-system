@@ -30,6 +30,9 @@ const registerUser = async (req, res) => {
             email,
             name,
             passwordHash: password, 
+            faculty,
+            gender,
+            yearOfStudy,
         });
 
         // Generate login token
@@ -48,6 +51,41 @@ const registerUser = async (req, res) => {
             return res.status(409).json({ message: 'A user with that Student ID or Email already exists.' });
         }
         res.status(500).json({ message: 'Error registering user.', error: error.message });
+    }
+};
+
+/**
+ * Updates currently logged in user's profile 
+ */
+const updateUserProfile = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Extract only the allowed fields from the request body
+        const { name, faculty, gender, yearOfStudy } = req.body;
+        const updateData = { name, faculty, gender, yearOfStudy };
+
+        // Remove any null fields
+        Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+        
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({ message: 'No update data provided.' });
+        }
+
+        const updatedUser = await userQueries.updateUser(userId, updateData);
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                user: updatedUser,
+            },
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating user profile.', error: error.message });
     }
 };
 
@@ -145,4 +183,5 @@ module.exports = {
     getUserProfile,
     getAllUsers,
     deleteUser,
+    updateUserProfile,
 };
