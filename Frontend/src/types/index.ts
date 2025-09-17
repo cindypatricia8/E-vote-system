@@ -27,6 +27,9 @@ export interface User {
   studentId: string;
   email: string;
   name: string;
+  faculty?: string;     
+  gender?: string;      
+  yearOfStudy?: number; 
   roles: ('student' | 'clubAdmin' | 'systemAdmin')[];
   votedInElections: string[];
   createdAt: string;
