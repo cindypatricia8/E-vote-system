@@ -94,7 +94,7 @@ export default function Login() {
         <div className="PasswordBox">
           <div className="password-wrap">
             <input
-              id="password" name="password"
+              id="password" name="password" type="password"
               placeholder="Your password"
               value={password} onChange={(e) => setPassword(e.target.value)}
               aria-invalid={!!errors.password} className="input"
