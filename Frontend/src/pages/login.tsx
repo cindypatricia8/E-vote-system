@@ -13,6 +13,7 @@ export default function Login() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [success, setSuccess] = useState<string | null>(null); 
 
+  // Validation for entering credentials
   const validation = (): FieldErrors => {
     const e: FieldErrors = {};
     if (!email.trim()) e.email = "Email is required";
@@ -37,9 +38,10 @@ export default function Login() {
       //if (res.token) tokenStore.save(res.token);
       //if (rememberMe) localStorage.setItem("auth.email", email.trim());
       //else localStorage.removeItem("auth.email");
-      //window.location.href = "/dashboard"; // change as needed
+      window.location.href = "/voting"; // change as needed
       setSuccess(`Welcome, ${res.user.name}! You are signed in.`);
       setPassword("");
+      // navigate(redirectTo, { replace: true});
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Login failed";
       setErrors({ general: msg });
@@ -59,12 +61,12 @@ export default function Login() {
         <a href="/forgot-password" className="v6_17">Forgot Password</a>
         <a href="/signup" className="v6_20">Sign Up</a>
         <span className="v6_19">Don’t have an account? </span>
-        
-        <div className="v6_37">
+
+      {/* <div className="v6_37">
           <button type="submit" className="primary-btn" disabled={submitting}>
             {submitting ? "Signing In..." : "Sign In"}
           </button>
-        </div>
+      </div> */}
         
       {/* Success or error message */}
       {success && (
@@ -81,6 +83,8 @@ export default function Login() {
       <form className="userForm" onSubmit={onSubmit} noValidate>
         <label className="EmailText">Email</label>
         <label htmlFor="password" className="PasswordText">Password</label>
+        
+        <button type="submit" className="primary-btn">Sign in</button>
 
         <div className="EmailBox">
           <input
@@ -111,7 +115,6 @@ export default function Login() {
 
         {errors.general && <div className="error-banner">{errors.general}</div>}
 
-        
         <span className="v6_38" aria-hidden="true">Sign In</span>
       </form>
     </div>

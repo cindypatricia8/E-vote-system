@@ -161,14 +161,14 @@ body {
   opacity: 1;
   text-align: left;
 }
-.v6_37 button{
+.primary-btn{
   width: 307px;
   height: 58px;
   background: rgba(47,114,207,0.8799999952316284);
   opacity: 1;
   position: absolute;
-  top: 700px;
-  left: 954px;
+  top: 300px;
+  left: 560px;
   color: white;
   border-top-left-radius: 1px;
   border-top-right-radius: 1px;
