@@ -13,13 +13,12 @@ export default function Login() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [success, setSuccess] = useState<string | null>(null); 
 
-  // Validation for entering credentials
+  // Credentials Validation
   const validation = (): FieldErrors => {
     const e: FieldErrors = {};
     if (!email.trim()) e.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Enter a valid email";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Invalid email";
     if (!password) e.password = "Password is required";
-    else if (password.length < 6) e.password = "Minimum 6 characters";
     return e;
   };
 
@@ -41,7 +40,6 @@ export default function Login() {
       window.location.href = "/voting"; // change as needed
       setSuccess(`Welcome, ${res.user.name}! You are signed in.`);
       setPassword("");
-      // navigate(redirectTo, { replace: true});
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Login failed";
       setErrors({ general: msg });
@@ -51,72 +49,72 @@ export default function Login() {
   };
 
   return (
-    <div className="v1_2">
-      <div className="v6_25"></div>
-      <span className="v6_24">Sign in with your Account to Access Monash Portal Apps</span>
-      <div className="v19_2"></div>
+    <div className="page">
+      <div className="instruction-box">
+        <div className="alert-logo" aria-hidden="true"></div>
+        <span className="instruction-text">Sign in with your Account to Access Monash Portal Apps</span>
+      </div>
+
+      <div className="monash-logo"></div>
       <span className="SignIn">Sign In</span>
-      <div className="v14_11"></div>
-      <div className="v6_15"></div>
-        <a href="/forgot-password" className="v6_17">Forgot Password</a>
-        <a href="/signup" className="v6_20">Sign Up</a>
-        <span className="v6_19">Don’t have an account? </span>
-
-      {/* <div className="v6_37">
-          <button type="submit" className="primary-btn" disabled={submitting}>
-            {submitting ? "Signing In..." : "Sign In"}
-          </button>
-      </div> */}
+    
+    <form className="userForm" onSubmit={onSubmit} noValidate>
         
-      {/* Success or error message */}
-      {success && (
-        <div className="success-banner" role="status" aria-live="polite">
-          {success}
-        </div>
-      )}
-      {errors.general && (
-        <div className="error-banner" role="alert">
-          {errors.general}
-        </div>
-      )}
-
-      <form className="userForm" onSubmit={onSubmit} noValidate>
         <label className="EmailText">Email</label>
-        <label htmlFor="password" className="PasswordText">Password</label>
-        
-        <button type="submit" className="primary-btn">Sign in</button>
-
         <div className="EmailBox">
           <input
-            id="email" name="email" type="email" placeholder="name@example.com"
-            value={email} onChange={(e) => setEmail(e.target.value)}
-            aria-invalid={!!errors.email} className="input"
+            id="email" 
+            name="email" 
+            type="email" 
+            placeholder="name@gmail.com"
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)}
+            aria-invalid={!!errors.email || undefined}
+            aria-describedby={errors.email ? "email-error" : undefined}
+            className={`input ${errors.email ? "input--error" : ""}`}
+            autoComplete="username"
           />
-          {errors.email && <div className="error-text">{errors.email}</div>}
+           {errors.email && (
+            <p id="email-error" className="error-email"> {errors.email}</p>
+           )}
         </div>
-
+        
+        <label htmlFor="password" className="PasswordText">Password</label>
         <div className="PasswordBox">
           <div className="password-wrap">
             <input
-              id="password" name="password" type="password"
+              id="password" 
+              name="password" 
+              type="password"
               placeholder="Your password"
               value={password} onChange={(e) => setPassword(e.target.value)}
               aria-invalid={!!errors.password} className="input"
             />
           </div>
-          {errors.password && <div className="error-text">{errors.password}</div>}
+          {errors.password && <div className="error-pass">{errors.password}</div>}
         </div>
 
         <div className="remember-row">
-          <input id="remember" type="checkbox"
-            checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+          <input id="remember" 
+          type="checkbox"
+          checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+          
           <label htmlFor="remember">Remember me</label>
         </div>
+        <a href="/forgot-password" className="forgot-password">Forgot Password</a>
 
-        {errors.general && <div className="error-banner">{errors.general}</div>}
+        <button type="submit" className="primary-btn">Sign in</button>
 
-        <span className="v6_38" aria-hidden="true">Sign In</span>
+        {errors.general && (
+          <div className="error-alert" role="alert" aria-live="assertive">
+            {errors.general}
+          </div>
+        )}    
       </form>
+      
+      <span className="no-account">Don’t have an account? </span>
+      <a href="/sign-up" className="sign-up">Sign Up</a>
+      
     </div>
   );
 }
