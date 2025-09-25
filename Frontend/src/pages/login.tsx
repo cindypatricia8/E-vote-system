@@ -1,26 +1,33 @@
-import React, { useEffect, useState } from "react";
-import type { FormEvent, ChangeEvent } from "react";
-import { login } from "../services/authService";
+import React, { useState } from "react";
+import type { FormEvent } from "react";
+import { login, register } from "../services/authService"; 
 import "./login.css";
 
-type FieldErrors = { email?: string; password?: string; general?: string };
+type FieldErrors = { studentId?: string, name?: string; email?: string; password?: string; general?: string };
 
 export default function Login() {
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+
+  const [studentId, setStudentId] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
   const [remember, setRemember] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
-  const [success, setSuccess] = useState<string | null>(null); 
+  const [success, setSuccess] = useState<string | null>(null);
 
-  // useEffect((=> ))
-
-  // Credentials Validation
   const validation = (): FieldErrors => {
     const e: FieldErrors = {};
-    if (!email.trim()) e.email = "Email is required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Invalid email";
+    if (!studentId.trim()) e.studentId = "Student ID is required";
     if (!password) e.password = "Password is required";
+
+    if (mode === 'register') {
+      if (!name.trim()) e.name = "Full Name is required";
+      if (!email.trim()) e.email = "Email is required";
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Invalid email format";
+    }
     return e;
   };
 
@@ -31,23 +38,44 @@ export default function Login() {
     setSuccess(null);
     if (Object.keys(v).length) return;
 
-    // setSubmitting(true);
+    setSubmitting(true);
     setErrors({});
+    
     try {
-      setSubmitting(true);
-      const res = await login(email.trim(), password );
-      //if (res.token) tokenStore.save(res.token);
-      //if (rememberMe) localStorage.setItem("auth.email", email.trim());
-      //else localStorage.removeItem("auth.email");
-      window.location.href = "/voting"; // change as needed
-      setSuccess(`Welcome, ${res.user.name}! You are signed in.`);
-      setPassword("");
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Login failed";
+
+      if (mode === 'login') {
+        const res = await login({ studentId: studentId.trim(), password });
+        setSuccess(`Welcome back, ${res.user.name}!`);
+      } else { // 'register' mode
+        const res = await register({
+          studentId: studentId.trim(),
+          name: name.trim(),
+          email: email.trim(),
+          password,
+        });
+        setSuccess(`Welcome, ${res.user.name}! Your account has been created.`);
+      }
+      
+      setTimeout(() => {
+        window.location.href = "/voting";
+      }, 1000);
+      
+    } catch (err: any) {
+      const msg = err.response?.data?.message || err.message || "An unknown error occurred.";
       setErrors({ general: msg });
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const toggleMode = () => {
+    setMode(prev => (prev === 'login' ? 'register' : 'login'));
+    setErrors({});
+    setSuccess(null);
+    setStudentId("");
+    setName("");
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -58,26 +86,55 @@ export default function Login() {
       </div>
 
       <div className="monash-logo"></div>
-      <span className="SignIn">Sign In</span>
+      <span className="SignIn">{mode === 'login' ? 'Sign In' : 'Create Account'}</span>
     
     <form className="userForm" onSubmit={onSubmit} noValidate>
         
-        <label className="EmailText">Email</label>
+ 
+        {mode === 'register' && (
+          <>
+            <label className="EmailText">Full Name</label>
+            <div className="EmailBox">
+              <input
+                id="name" 
+                name="name" 
+                type="text" 
+                placeholder="Your Full Name"
+                value={name} 
+                onChange={(e) => setName(e.target.value)}
+                className={`input ${errors.name ? "input--error" : ""}`}
+              />
+               {errors.name && <p className="error-email">{errors.name}</p>}
+            </div>
+
+            <label className="EmailText">Email</label>
+            <div className="EmailBox">
+              <input
+                id="email" 
+                name="email" 
+                type="email" 
+                placeholder="name@university.edu"
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                className={`input ${errors.email ? "input--error" : ""}`}
+              />
+              {errors.email && <p className="error-email">{errors.email}</p>}
+            </div>
+          </>
+        )}
+        
+        <label className="EmailText">Student ID</label>
         <div className="EmailBox">
           <input
-            id="email" 
-            name="email" 
-            type="email" 
-            placeholder="name@gmail.com"
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)}
-            aria-invalid={!!errors.email || undefined}
-            aria-describedby={errors.email ? "email-error" : undefined}
-            className={`input ${errors.email ? "input--error" : ""}`}
+            id="studentId" 
+            name="studentId" 
+            type="text" 
+            placeholder="Your Student ID"
+            value={studentId} 
+            onChange={(e) => setStudentId(e.target.value)}
+            className={`input ${errors.studentId ? "input--error" : ""}`}
           />
-           {errors.email && (
-            <p id="email-error" className="error-email"> {errors.email}</p>
-           )}
+           {errors.studentId && <p id="email-error" className="error-email">{errors.studentId}</p>}
         </div>
         
         <label htmlFor="password" className="PasswordText">Password</label>
@@ -89,11 +146,12 @@ export default function Login() {
               type="password"
               placeholder="Your password"
               value={password} onChange={(e) => setPassword(e.target.value)}
-              aria-invalid={!!errors.password} className="input"
+              className={`input ${errors.password ? "input--error" : ""}`}
             />
           </div>
           {errors.password && <div className="error-pass">{errors.password}</div>}
         </div>
+
 
         <div className="remember-row">
           <input id="remember" 
@@ -102,19 +160,33 @@ export default function Login() {
           
           <label htmlFor="remember">Remember me</label>
         </div>
-        <a href="/forgot-password" className="forgot-password">Forgot Password</a>
+        {mode === 'login' && <a href="/forgot-password" className="forgot-password">Forgot Password</a>}
 
-        <button type="submit" className="primary-btn">Sign in</button>
+
+        <button type="submit" className="primary-btn" disabled={submitting}>
+          {submitting ? 'Submitting...' : (mode === 'login' ? 'Sign in' : 'Create Account')}
+        </button>
+
 
         {errors.general && (
           <div className="error-alert" role="alert" aria-live="assertive">
             {errors.general}
           </div>
-        )}    
+        )}
+        {success && (
+          <div className="success-alert" role="alert" aria-live="assertive">
+            {success}
+          </div>
+        )}
       </form>
       
-      <span className="no-account">Don’t have an account? </span>
-      <a href="/sign-up" className="sign-up">Sign Up</a>
+
+      <div className="toggle-container">
+        <span className="no-account">{mode === 'login' ? "Don’t have an account? " : "Already have an account? "}</span>
+        <button type="button" onClick={toggleMode} className="sign-up">
+          {mode === 'login' ? 'Sign Up' : 'Sign In'}
+        </button>
+      </div>
       
     </div>
   );
