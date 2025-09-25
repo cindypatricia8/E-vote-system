@@ -1,16 +1,7 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-import type { FormEvent } from "react";
-import { login, register } from "../services/authService"; 
-import "./login.css";
-import * as apiService from "../api/apiService";
-import type { User } from "../types";
-=======
 import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
 import './login.css'; 
->>>>>>> ace913daa24d3f2aacb81c065d9d9f5f3bd8a30d
 
 
 type FieldErrors = { studentId?: string; password?: string; general?: string };
@@ -18,7 +9,6 @@ type FieldErrors = { studentId?: string; password?: string; general?: string };
 export default function Login() {
   const navigate = useNavigate();
   
-
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -49,7 +39,7 @@ export default function Login() {
       const { user } = await login({ studentId: studentId.trim(), password });
       setSuccess(`Welcome back, ${user.name}! Redirecting...`);
 
-      // Redirect after a short delay to show the success message
+
       setTimeout(() => {
         navigate('/voting'); 
       }, 1000);
@@ -90,4 +80,55 @@ export default function Login() {
            )}
         </div>
         
-        <label htmlFor="password" className="PasswordText">Pa
+        <label htmlFor="password" className="PasswordText">Password</label>
+        <div className="PasswordBox">
+          <div className="password-wrap">
+            <input
+              id="password" 
+              name="password" 
+              type="password"
+              placeholder="Your password"
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)}
+              className={`input ${errors.password ? 'input--error' : ''}`}
+            />
+          </div>
+          {errors.password && <div className="error-pass">{errors.password}</div>}
+        </div>
+
+        <div className="remember-row">
+          <input 
+            id="remember" 
+            type="checkbox"
+            checked={remember} 
+            onChange={(e) => setRemember(e.target.checked)} 
+          />
+          <label htmlFor="remember">Remember me</label>
+        </div>
+        <a href="/forgot-password" className="forgot-password">Forgot Password</a>
+
+        <button type="submit" className="primary-btn" disabled={submitting}>
+          {submitting ? 'Signing in...' : 'Sign in'}
+        </button>
+
+        {errors.general && (
+          <div className="error-alert" role="alert" aria-live="assertive">
+            {errors.general}
+          </div>
+        )}
+        {success && (
+          <div className="success-alert" role="alert" aria-live="assertive">
+            {success}
+          </div>
+        )}
+      </form>
+      
+      <div className="toggle-container">
+        <span className="no-account">Don’t have an account? </span>
+        <button type="button" onClick={() => navigate('/register')} className="sign-up">
+          Sign Up
+        </button>
+      </div>
+    </div>
+  );
+}
