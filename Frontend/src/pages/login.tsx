@@ -13,6 +13,8 @@ export default function Login() {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [success, setSuccess] = useState<string | null>(null); 
 
+  // useEffect((=> ))
+
   // Credentials Validation
   const validation = (): FieldErrors => {
     const e: FieldErrors = {};
@@ -72,7 +74,6 @@ export default function Login() {
             aria-invalid={!!errors.email || undefined}
             aria-describedby={errors.email ? "email-error" : undefined}
             className={`input ${errors.email ? "input--error" : ""}`}
-            autoComplete="username"
           />
            {errors.email && (
             <p id="email-error" className="error-email"> {errors.email}</p>

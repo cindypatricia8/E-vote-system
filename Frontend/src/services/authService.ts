@@ -8,7 +8,7 @@ export async function login(email: string, password: string): Promise<LoginSucce
   await new Promise((r) => setTimeout(r, 500));
 
   // demo creds: test@ex.com / secret123
-  if (email === "test@example.com" && password === "cgun0012") {
+  if (email === "test@gmail.com" && password === "123456") {
     return { token: "mock-token", user: { id: "1", name: "Test User", email } };
   }
   throw new Error("Invalid email or password");

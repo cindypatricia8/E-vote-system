@@ -74,14 +74,12 @@ export default function MsaElectionDetailsForm() {
 
   return (
     <div className="page">
-      <main className="auth">
         {/* Header / branding */}
-        <div className="masthead" style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 8 }}>
+        <div className="header">
           <div className="monash-logo"></div>
           <h1 style={{ margin: 0, fontWeight: 600 }}>MSA Election 2026/2027</h1>
         </div>
 
-        {/* Instruction*/}
         <span className="instruction-text">Please enter your details below</span> 
 
           <form className="userForm" onSubmit={onSubmit} noValidate>
@@ -187,7 +185,6 @@ export default function MsaElectionDetailsForm() {
               {submitting ? "Submitting..." : "Next"}
             </button>
           </form>
-      </main>
     </div>
   );
 }
