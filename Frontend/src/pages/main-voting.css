@@ -1,0 +1,41 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-size: 14px;
+}
+.page {
+  display:flex;
+  flex-direction:column;
+  padding: 16px;
+  background: #fff;
+}
+.header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.title  { grid-column: 2; margin: 0; font-weight: 800; }
+
+.monash-logo {
+  width: 404px;
+  height: 129px;
+  background: url("../images/v19_2.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  opacity: 1;
+}
+.details {
+    margin-left: 100px;
+}
+.ballot { grid-column: 1 / -1; margin-top: 8px; }
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  cursor: pointer;
+}
+.option input { accent-color: #0d6efd; }

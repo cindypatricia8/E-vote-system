@@ -1,15 +1,22 @@
-export type LoginSuccess = {
-    token: string;
-    user: { id: string, name: string, email:string};
+import {
+    registerUser as apiRegisterUser,
+    loginUser as apiLoginUser,
+    setAuthToken
+} from '../api/apiService';
+import type { UserRegistrationPayload, LoginPayload } from '../types';
+
+export const register = async (userData: UserRegistrationPayload) => {
+    const response = await apiRegisterUser(userData);
+    if (response.data.token) {
+        setAuthToken(response.data.token);
+    }
+    return response.data.data; // Returns { user }
 };
 
-export async function login(email: string, password: string): Promise<LoginSuccess> {
-  // simulate network
-  await new Promise((r) => setTimeout(r, 500));
-
-  // demo creds: test@ex.com / secret123
-  if (email === "test@example.com" && password === "cgun0012") {
-    return { token: "mock-token", user: { id: "1", name: "Test User", email } };
-  }
-  throw new Error("Invalid email or password");
-}
+export const login = async (credentials: LoginPayload) => {
+    const response = await apiLoginUser(credentials);
+    if (response.data.token) {
+        setAuthToken(response.data.token);
+    }
+    return response.data.data; // Returns { user }
+};
