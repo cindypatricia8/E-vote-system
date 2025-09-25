@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import type { FormEvent, ChangeEvent } from "react";
 import { login } from "../services/authService";
 import "./login.css";
+import * as apiService from "../api/apiService";
+import type { User } from "../types";
 
 type FieldErrors = { email?: string; password?: string; general?: string };
 
