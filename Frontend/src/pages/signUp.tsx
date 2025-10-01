@@ -1,6 +1,7 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, } from 'react';
+import type {ChangeEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { register } from '../services/authService'; // Assuming this is in your auth service
+import { register } from '../services/authService'; 
 import type { UserRegistrationPayload } from '../types';
 import './SignUp.css';
 

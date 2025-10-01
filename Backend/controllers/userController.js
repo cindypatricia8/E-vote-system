@@ -18,21 +18,22 @@ const generateToken = (id) => {
  */
 const registerUser = async (req, res) => {
     try {
-        const { studentId, email, password, name } = req.body;
+        const { studentId, email, password, name, faculty, gender, yearOfStudy } = req.body;
 
+        // 1. Basic Validation
         if (!studentId || !email || !password || !name) {
             return res.status(400).json({ message: 'Please provide all required fields: studentId, email, password, and name.' });
         }
 
-        // Create user
+        // 2. Create user with all the provided data
         const newUser = await userQueries.createUser({
             studentId,
             email,
             name,
-            passwordHash: password, 
-            faculty,
-            gender,
-            yearOfStudy,
+            passwordHash: password, // Pass the plain password to be hashed by the model
+            faculty,      // Now included
+            gender,       // Now included
+            yearOfStudy,  // Now included
         });
 
         // Generate login token

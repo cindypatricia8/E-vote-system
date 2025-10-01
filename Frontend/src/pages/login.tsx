@@ -1,8 +1,8 @@
-import React, { useState, FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState,  } from 'react';
+import type {FormEvent} from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { login } from '../services/authService';
 import './login.css'; 
-
 
 type FieldErrors = { studentId?: string; password?: string; general?: string };
 
@@ -16,7 +16,6 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [success, setSuccess] = useState<string | null>(null);
-
 
   const validation = (): FieldErrors => {
     const e: FieldErrors = {};
@@ -38,7 +37,6 @@ export default function Login() {
     try {
       const { user } = await login({ studentId: studentId.trim(), password });
       setSuccess(`Welcome back, ${user.name}! Redirecting...`);
-
 
       setTimeout(() => {
         navigate('/voting'); 
