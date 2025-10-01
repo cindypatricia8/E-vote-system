@@ -1,7 +1,8 @@
 import React, { useState,  } from 'react';
 import type {FormEvent} from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import { login } from '../services/authService';
+import { login } from '../context/authContext';
+import { loginUser, setAuthToken } from '../api/apiService';
 import './login.css'; 
 
 type FieldErrors = { studentId?: string; password?: string; general?: string };
@@ -35,8 +36,11 @@ export default function Login() {
     setErrors({});
 
     try {
-      const { user } = await login({ studentId: studentId.trim(), password });
-      setSuccess(`Welcome back, ${user.name}! Redirecting...`);
+      const response  = await loginUser({ studentId: studentId.trim(), password });
+      const token = response.data.token;
+
+      setAuthToken(token);
+      setSuccess(`Welcome back, ${response.data.data.user.name}! Redirecting...`);
 
       setTimeout(() => {
         navigate('/voting'); 

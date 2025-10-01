@@ -1,7 +1,7 @@
 import React, { useState, } from 'react';
 import type {ChangeEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { register } from '../services/authService'; 
+import { register } from '../context/authContext'; 
 import type { UserRegistrationPayload } from '../types';
 import './SignUp.css';
 
