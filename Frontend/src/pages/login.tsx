@@ -6,7 +6,7 @@ import './login.css';
 
 type FieldErrors = { studentId?: string; password?: string; general?: string };
 
-export default function Login() {
+const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   
   const [studentId, setStudentId] = useState('');
@@ -29,7 +29,7 @@ export default function Login() {
     const v = validation();
     setErrors(v);
     setSuccess(null);
-    if (Object.keys(v).length > 0) return;
+    if (Object.keys(v).length > 0) return;  
 
     setSubmitting(true);
     setErrors({});
@@ -132,4 +132,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default LoginPage;

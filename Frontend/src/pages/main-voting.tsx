@@ -14,7 +14,7 @@ const POSITIONS: Position[] = [
     ],
   }];
 
-export default function MainVoting () {
+export const MainVoting: React.FC = () => {
   const [selections, setSelections] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);

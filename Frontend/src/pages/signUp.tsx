@@ -8,7 +8,7 @@ import './SignUp.css';
 
 type FormErrors = Partial<Record<keyof UserRegistrationPayload | 'general' | 'surname', string>>;
 
-export default function SignUp() {
+const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
@@ -157,4 +157,6 @@ export default function SignUp() {
       </form>
     </div>
   );
-}
+};
+
+export default SignUp;

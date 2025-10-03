@@ -4,8 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import Login from './pages/login';
 import SignUp from './pages/signUp';
-
-const VotingPage = () => <div>Welcome to the Voting Page!</div>; 
+import VotingPage from './pages/VoteDashboard'
 
 function App() {
   return (
