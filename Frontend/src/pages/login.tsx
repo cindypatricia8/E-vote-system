@@ -1,7 +1,6 @@
 import React, { useState,  } from 'react';
 import type {FormEvent} from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import { login } from '../context/authContext';
 import { loginUser, setAuthToken } from '../api/apiService';
 import './login.css'; 
 
@@ -36,11 +35,11 @@ export default function Login() {
     setErrors({});
 
     try {
-      const response  = await loginUser({ studentId: studentId.trim(), password });
-      const token = response.data.token;
+      const response  = await loginUser({ studentId: studentId.trim(), password }); // We are logging in the user here with user data
+      const token = response.data.token; // We grab the token from the response data (This is the keycard)
 
-      setAuthToken(token);
-      setSuccess(`Welcome back, ${response.data.data.user.name}! Redirecting...`);
+      setAuthToken(token); // We set the keycard for the whole application so they can keep the user logged in
+      setSuccess(`Welcome back, ${response.data.data.user.name}! Redirecting...`); // Respond with name by grabbing the name from response data 
 
       setTimeout(() => {
         navigate('/voting'); 
