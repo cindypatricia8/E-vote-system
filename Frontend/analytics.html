@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { margin:0; font-family:Arial,sans-serif; background:#f4f6f9; }
+.container { padding:30px; max-width:1200px; margin:auto; }
+h1 { text-align:center; margin-bottom:20px; }
+.election-buttons { text-align:center; margin-bottom:30px; }
+.election-buttons button { margin:5px; padding:10px 20px; border:none; border-radius:8px; background:#2980b9; color:white; cursor:pointer; transition:0.2s; }
+.election-buttons button:hover { background:#2471a3; }
+.charts { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+canvas { flex:1; min-width:300px; max-width:400px; background:white; border-radius:10px; padding:20px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+h2 { text-align:center; margin-bottom:20px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Data Analytics</h1>
+<div class="election-buttons" id="electionList"></div>
+<div id="chartContainer" class="charts"></div>
+</div>
+
+<script>
+let allElections = JSON.parse(sessionStorage.getItem('allElections')) || [];
+const electionList = document.getElementById('electionList');
+const chartContainer = document.getElementById('chartContainer');
+
+function showElectionCharts(election){
+  chartContainer.innerHTML='';
+  const title = document.createElement('h2');
+  title.textContent = `${election.electionName} (${election.club}) - ${election.voteType}`;
+  chartContainer.appendChild(title);
+
+  ['bar','pie','line'].forEach((type,i)=>{
+    const canvas = document.createElement('canvas');
+    canvas.id=`chart-${i}`;
+    chartContainer.appendChild(canvas);
+
+    new Chart(canvas,{
+      type:type,
+      data:{
+        labels:election.candidates.map(c=>c.name),
+        datasets:[{label:'Votes', data:election.candidates.map(c=>0), backgroundColor:election.candidates.map(c=>c.color)}]
+      },
+      options:{responsive:true}
+    });
+  });
+}
+
+if(allElections.length>0){
+  allElections.forEach(election=>{
+    const btn = document.createElement('button');
+    btn.textContent = election.electionName;
+    btn.onclick=()=>showElectionCharts(election);
+    electionList.appendChild(btn);
+  });
+  showElectionCharts(allElections[0]);
+} else {
+  chartContainer.innerHTML='<p style="text-align:center;">No elections created yet.</p>';
+}
+</script>
+</body>
+</html>
