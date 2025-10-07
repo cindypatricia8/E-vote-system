@@ -178,6 +178,25 @@ const deleteUser = async (req, res) => {
     }
 };
 
+/**
+ * Handles requests to search for users.
+ * Expects a query parameter 'q' (e.g., /api/users/search?q=john).
+ */
+const searchUsers = async (req, res) => {
+    try {
+        const searchTerm = req.query.q || '';
+        if (searchTerm.length < 2) {
+            return res.status(200).json({ status: 'success', data: { users: [] } });
+        }
+        
+        const users = await userQueries.searchUsersByNameOrId(searchTerm);
+        res.status(200).json({ status: 'success', data: { users } });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error searching for users.', error: error.message });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
@@ -185,4 +204,5 @@ module.exports = {
     getAllUsers,
     deleteUser,
     updateUserProfile,
+    searchUsers,
 };

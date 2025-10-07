@@ -14,12 +14,17 @@ const createClub = async (req, res) => {
         }
 
         // The user creating the club becomes the first admin.
-        const initialAdminId = req.user._id;
+        const adminSet = new Set([req.user._id.toString()]);
+        
+        // Add admin list to admin section in database
+        if (admins && Array.isArray(admins)) {
+            admins.forEach(adminId => adminSet.add(adminId));
+        }
 
         const clubData = {
             name,
             description,
-            admins: [initialAdminId],
+            admins: Array.from(adminSet), 
         };
 
         const newClub = await clubQueries.createClub(clubData);

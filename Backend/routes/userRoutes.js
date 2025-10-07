@@ -9,7 +9,8 @@ router.post('/login', userController.loginUser);
 
 // Protected routes (requires user to be logged in)
 router.get('/profile', protect, userController.getUserProfile);
-router.put('/profile',protect,userController.updateUserProfile)
+router.put('/profile',protect,userController.updateUserProfile);
+router.get('/search', protect, userController.searchUsers);
 
 // System admin-only routes
 router.get('/', protect, restrictTo('systemAdmin'), userController.getAllUsers);

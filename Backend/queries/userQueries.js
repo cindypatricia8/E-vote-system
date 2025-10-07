@@ -136,6 +136,29 @@ const recordUserVote = async (userId, electionId) => {
     }
 };
 
+/**
+ * Searches for users by name or student ID (case-insensitive).
+ * @param {string} searchTerm - The text to search for.
+ * @returns {Promise<Array<object>>} A list of matching users (limited to 10).
+ */
+const searchUsersByNameOrId = async (searchTerm) => {
+    try {
+        const searchRegex = new RegExp(searchTerm, 'i'); 
+        
+        return await User.find({
+            $or: [
+                { name: { $regex: searchRegex } },
+                { studentId: { $regex: searchRegex } }
+            ]
+        })
+        .select('_id name studentId') // Only return necessary, non-sensitive fields
+        .limit(10);
+    } catch (error) {
+        console.error("Error searching users:", error.message);
+        throw error;
+    }
+};
+
 
 module.exports = {
     createUser,
@@ -146,4 +169,5 @@ module.exports = {
     updateUser,
     deleteUser,
     recordUserVote,
+    searchUsersByNameOrId,
 };
