@@ -7,7 +7,7 @@ const userQueries = require('../queries/userQueries');
  */
 const createClub = async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, admins } = req.body;
 
         if (!name) {
             return res.status(400).json({ message: 'Club name is required.' });

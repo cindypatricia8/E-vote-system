@@ -41,9 +41,12 @@ export const getUserProfile = () =>
 export const updateUserProfile = (updateData: UpdateProfilePayload) =>
     api.put<{ status: 'success', data: { user: User } }>('/users/profile', updateData);
 
+export const searchUsers = (query: string) =>
+    api.get<{ status: 'success', data: { users: User[] } }>(`/users/search?q=${query}`);
+
 // CLUB API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-export const createClub = (clubData: { name: string; description?: string }) =>
+export const createClub = (clubData: { name: string; description?: string; admins?: string[] }) =>
     api.post<{ status: 'success', data: { club: Club } }>('/clubs', clubData);
 
 export const getAllClubs = () =>

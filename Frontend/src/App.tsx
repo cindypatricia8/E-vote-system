@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import Login from './pages/login';
 import SignUp from './pages/signUp';
-import VotingPage from './pages/VoteDashboard'
+import VotingPage from './pages/CreateClubPage'
 
 function App() {
   return (
