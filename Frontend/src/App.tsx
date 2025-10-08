@@ -6,6 +6,7 @@ import Login from './pages/login';
 import SignUp from './pages/signUp';
 import VotingDashboard from './pages/VoteDashboard';
 import VotingPage from './pages/voting';
+import MainVoting from './pages/main-voting';
 import CreateClubPage from './pages/CreateClubPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateElectionPage from './pages/admin/CreateElectionPage';

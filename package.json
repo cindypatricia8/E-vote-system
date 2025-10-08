@@ -2,6 +2,7 @@
   "dependencies": {
     "bootstrap": "^5.2.3",
     "lucide-react": "^0.545.0",
+    "react-router-dom": "^7.9.4",
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1"
   }

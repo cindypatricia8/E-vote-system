@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ImageSlider, type Candidate, type Position } from "../components/imageSlider";
+import { ImageSlider, type Candidate, type Position } from "../components/ImageSlider";
 import "./main-voting.css";
 
 import presidentA from "../images/presidentA.jpg";
@@ -36,7 +36,7 @@ function TabBar({ value, onChange }: { value: Position; onChange: (p: Position) 
   );
 }
 
-export default function App() {
+export default function MainVoting() {
   const [tab, setTab] = useState<Position>("President");
 
   // remember a selection per role
