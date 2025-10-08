@@ -7,6 +7,8 @@ const { protect, restrictTo } = require('../middleware/authMiddleware');
 router.get('/', clubController.getAllClubs);
 router.get('/:id', clubController.getClubById);
 
+router.get('/managed', protect, clubController.getManagedClubs);
+
 // System admin routes
 router.post('/', protect, restrictTo('systemAdmin'), clubController.createClub);
 router.put('/:id', protect, clubController.updateClub); // Permissions checked inside controller

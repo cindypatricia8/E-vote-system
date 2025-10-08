@@ -54,6 +54,25 @@ const getAllClubs = async (req, res) => {
 };
 
 /**
+ * Retrieves all clubs that the currently logged-in user is an admin of.
+ */
+const getManagedClubs = async (req, res) => {
+    try {
+        const adminId = req.user._id;
+
+        const clubs = await clubQueries.findClubsByAdmin(adminId);
+        
+        res.status(200).json({
+            status: 'success',
+            results: clubs.length,
+            data: { clubs },
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching managed clubs.', error: error.message });
+    }
+};
+
+/**
  * Retrieves details for a single club by its ID. No roles required
  */
 const getClubById = async (req, res) => {
@@ -187,4 +206,5 @@ module.exports = {
     deleteClub,
     addMember,
     removeMember,
+    getManagedClubs
 };

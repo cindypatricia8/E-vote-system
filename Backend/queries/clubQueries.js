@@ -145,6 +145,19 @@ const isUserClubMember = async (clubId, userId) => {
 };
 
 /**
+ * Returns all clubs managed by an admin
+ * @param {string} adminId - The user ID of the admin.
+ * @returns {Promise<Array<object>>} An array of all managed club documents.
+ */
+const findClubsByAdmin = async (adminId) => {
+    try {
+        return await Club.find({admins: adminId}).sort({ name: 1 });
+    } catch (error) {
+        console.error(`Error finding managed clubs for user ${adminId}`, error.message);
+    }
+};
+
+/**
  * Deletes a club and deletes it's associated elections and ballots.
  * @param {string} clubId - The ID of the club to delete.
  * @returns {Promise<object|null>} The deleted club document or null if not found.
@@ -184,5 +197,6 @@ module.exports = {
     addMemberToClub,
     removeMemberFromClub,
     isUserClubMember,
-    deleteClubAndCascade
+    deleteClubAndCascade,
+    findClubsByAdmin
 };
