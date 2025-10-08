@@ -1,8 +1,16 @@
 import axios from 'axios';
 import type {
-    AuthResponse, UserRegistrationPayload, LoginPayload, Club,
-    Election, VoteSelectionPayload, ElectionResultsResponse, User, UpdateProfilePayload,
-} from '../types';
+  AuthResponse,
+  UserRegistrationPayload,
+  LoginPayload,
+  Club,
+  Election,
+  VoteSelectionPayload,
+  ElectionResultsResponse,
+  User,
+  UpdateProfilePayload,
+  CreateElectionPayload,
+} from "../types";
 
 // Create a configured instance of Axios
 const api = axios.create({
@@ -52,6 +60,9 @@ export const createClub = (clubData: { name: string; description?: string; admin
 export const getAllClubs = () =>
     api.get<{ status: 'success', results: number, data: { clubs: Club[] } }>('/clubs');
 
+export const getManagedClubs = () =>
+    api.get<{ status: 'success', results: number, data: { clubs: Club[] } }>('/clubs');
+
 export const getClubById = (clubId: string) =>
     api.get<{ status: 'success', data: { club: Club } }>(`/clubs/${clubId}`);
 
@@ -64,7 +75,7 @@ export const removeMemberFromClub = (clubId: string, memberId: string) =>
 
 // ELECTION API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-export const createElection = (electionData: Omit<Election, '_id' | 'clubId' | 'createdAt' | 'updatedAt' | 'status'> & { clubId: string }) =>
+export const createElection = (electionData: CreateElectionPayload) =>
     api.post<{ status: 'success', data: { election: Election } }>('/elections', electionData);
 
 export const getActiveElections = () =>

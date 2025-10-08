@@ -42,7 +42,7 @@ const LoginPage: React.FC = () => {
       setSuccess(`Welcome back, ${response.data.data.user.name}! Redirecting...`); // Respond with name by grabbing the name from response data 
 
       setTimeout(() => {
-        navigate('/voting'); 
+        navigate('/'); 
       }, 1000);
 
     } catch (err: any) {

@@ -109,3 +109,23 @@ export interface ElectionResultsResponse {
     results: ElectionResultPosition[];
   };
 }
+
+export interface CreateCandidatePayload {
+    candidateId: string;
+    statement: string;
+}
+
+export interface CreatePositionPayload {
+    title: string;
+    maxSelections: number;
+    candidates: CreateCandidatePayload[];
+}
+
+export interface CreateElectionPayload {
+    title: string;
+    clubId: string;
+    description?: string;
+    startTime: string;
+    endTime: string;
+    positions: CreatePositionPayload[];
+}
