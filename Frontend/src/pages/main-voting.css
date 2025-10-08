@@ -1,41 +1,84 @@
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
-body {
-  font-size: 14px;
+.container{
+  align-content: center;
 }
-.page {
-  display:flex;
-  flex-direction:column;
-  padding: 16px;
-  background: #fff;
+.selection{
+  align-content: center;
+}:root {
+  --maxw: 900px;
+  --radius: 12px;
+  --border: 1px solid #eee;
+  --card-border: 1px solid #ececf3;
 }
-.header {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 8px;
-}
-.title  { grid-column: 2; margin: 0; font-weight: 800; }
 
-.monash-logo {
-  width: 404px;
-  height: 129px;
-  background: url("../images/v19_2.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  opacity: 1;
+/* Page shell */
+.page {
+  max-width: var(--maxw);
+  margin: 24px auto;
+  padding: 0 12px;
 }
-.details {
-    margin-left: 100px;
+
+/* Subtle helper text */
+.subtle {
+  margin-top: -6px;
+  color: #666;
 }
-.ballot { grid-column: 1 / -1; margin-top: 8px; }
-.option {
+
+/* Form card */
+.vote-form {
+  margin-top: 16px;
+}
+
+.vote-fieldset {
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+
+.vote-legend {
+  padding: 0 6px;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+/* Radio options */
+.radio-option {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 8px;
   padding: 6px 4px;
   cursor: pointer;
 }
-.option input { accent-color: #0d6efd; }
+
+/* Submit button */
+.submit-btn {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+/* Tabs */
+.tabbar {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.tab {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tab[aria-selected="true"],
+.tab.active {
+  background: #fff;
+  border-color: #bbb;
+}
