@@ -38,7 +38,6 @@ if(!electionData){
   window.location.href="create_election.html"; 
 }
 
-// Display election info
 document.getElementById('electionName').textContent = electionData.title;
 document.getElementById('voteTypeDisplay').textContent = `Vote Type: ${electionData.voteType}`;
 document.getElementById('clubName').textContent = `Club: ${electionData.club}`;
@@ -50,14 +49,12 @@ let selectedVotes = [];
 const candidates = electionData.candidates || [];
 if(candidates.length === 0){ errorMessage.textContent = "No candidates available."; }
 
-// Generate candidate cards
 candidates.forEach((c,i)=>{
   const card = document.createElement('div');
   card.className = 'candidate-card';
   card.innerHTML = `<div class="candidate-name">${c.name}</div>
                     <div class="candidate-mission">${c.mission}</div>`;
 
-  // Ranked vote input
   if(electionData.voteType==='ranked'){
     const rankInput = document.createElement('input');
     rankInput.type='number';
@@ -69,14 +66,12 @@ candidates.forEach((c,i)=>{
     card.appendChild(rankInput);
   }
 
-  // Handle single/multiple selection
   card.addEventListener('click', ()=>{
     if(electionData.voteType==='single'){
       selectedVotes = [c.name];
       document.querySelectorAll('.candidate-card').forEach(t=>t.classList.remove('selected'));
       card.classList.add('selected');
-    }
-    else if(electionData.voteType==='multiple'){
+    } else if(electionData.voteType==='multiple'){
       if(selectedVotes.includes(c.name)){
         selectedVotes = selectedVotes.filter(v=>v!==c.name);
         card.classList.remove('selected');
@@ -90,28 +85,51 @@ candidates.forEach((c,i)=>{
   candidatesDiv.appendChild(card);
 });
 
-// Validate ranked votes for duplicates
 function validateRanks(){
   const rankInputs = Array.from(document.querySelectorAll('.rank-input'));
   const values = rankInputs.map(i=>parseInt(i.value));
   const duplicates = values.filter((v,idx)=>v && values.indexOf(v)!==idx);
   rankInputs.forEach(i=>i.style.border=(i.value && duplicates.includes(parseInt(i.value)))?'3px solid red':'1px solid #ccc');
-  errorMessage.textContent = duplicates.length>0?"Duplicate ranks detected!":"";
+  errorMessage.textContent = duplicates.length>0?"Duplicate ranks detected!":"";  
   return duplicates.length===0;
 }
 
-// Save votes and go to live.html
 function goLive(){
   if(electionData.voteType==='ranked'){
     if(!validateRanks()) return;
-    selectedVotes = Array.from(document.querySelectorAll('.rank-input')).map((input,i)=>({name:candidates[i].name,rank:parseInt(input.value)}));
+    selectedVotes = Array.from(document.querySelectorAll('.rank-input')).map((input,i)=>({
+      name: candidates[i].name,
+      rank: parseInt(input.value)
+    }));
   }
+
   if(selectedVotes.length===0 && electionData.voteType!=='ranked'){ 
     errorMessage.textContent="Select at least one candidate."; 
     return; 
   }
 
+  // Save to sessionStorage
   sessionStorage.setItem('selectedVotes', JSON.stringify(selectedVotes));
+
+  // Save election structure without votes first
+  let allElections = JSON.parse(localStorage.getItem('allElections') || '[]');
+  const existingIndex = allElections.findIndex(e => e.title === electionData.title);
+
+  const electionToSave = {
+    title: electionData.title,
+    club: electionData.club,
+    voteType: electionData.voteType,
+    candidates: electionData.candidates.map(c => ({name: c.name, mission: c.mission})), // no votes yet
+    votes: selectedVotes
+  };
+
+  if(existingIndex !== -1){
+    allElections[existingIndex] = electionToSave;
+  } else {
+    allElections.push(electionToSave);
+  }
+
+  localStorage.setItem('allElections', JSON.stringify(allElections));
   window.location.href = "live.html";
 }
 </script>
