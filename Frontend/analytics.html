@@ -24,42 +24,85 @@ h2 { text-align:center; margin-bottom:20px; }
 </div>
 
 <script>
-let allElections = JSON.parse(sessionStorage.getItem('allElections')) || [];
+// Load elections from localStorage
+let allElections = JSON.parse(localStorage.getItem('allElections')) || [];
 const electionList = document.getElementById('electionList');
 const chartContainer = document.getElementById('chartContainer');
 
 function showElectionCharts(election){
   chartContainer.innerHTML='';
   const title = document.createElement('h2');
-  title.textContent = `${election.electionName} (${election.club}) - ${election.voteType}`;
+  title.textContent = `${election.title} (${election.club}) - ${election.voteType}`;
   chartContainer.appendChild(title);
 
-  ['bar','pie','line'].forEach((type,i)=>{
-    const canvas = document.createElement('canvas');
-    canvas.id=`chart-${i}`;
-    chartContainer.appendChild(canvas);
+  // Candidate names (votes start at 0)
+  const candidateNames = election.candidates.map(c=>c.name);
+  const candidateVotes = new Array(candidateNames.length).fill(0);
 
-    new Chart(canvas,{
-      type:type,
-      data:{
-        labels:election.candidates.map(c=>c.name),
-        datasets:[{label:'Votes', data:election.candidates.map(c=>0), backgroundColor:election.candidates.map(c=>c.color)}]
-      },
-      options:{responsive:true}
-    });
+  // Bar Chart: Votes by Candidate
+  const barCanvas = document.createElement('canvas');
+  chartContainer.appendChild(barCanvas);
+  new Chart(barCanvas, {
+    type: 'bar',
+    data: {
+      labels: candidateNames.length ? candidateNames : ['No Candidates'],
+      datasets: [{
+        label: 'Votes',
+        data: candidateVotes,
+        backgroundColor:["#3498db","#2ecc71","#f1c40f","#e67e22","#9b59b6"]
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  // Pie Chart: Votes per Election (all start at 0)
+  const pieCanvas = document.createElement('canvas');
+  chartContainer.appendChild(pieCanvas);
+  new Chart(pieCanvas, {
+    type: 'pie',
+    data: {
+      labels: [election.title],
+      datasets: [{
+        label: 'Votes per Election',
+        data: [0],
+        backgroundColor: ["#2980b9"]
+      }]
+    },
+    options: { responsive: true }
+  });
+
+  // Line Chart: Votes Over Time (blank)
+  const lineCanvas = document.createElement('canvas');
+  chartContainer.appendChild(lineCanvas);
+  const timeLabels = ["9AM","11AM","1PM","3PM","5PM"];
+  new Chart(lineCanvas, {
+    type: 'line',
+    data: {
+      labels: timeLabels,
+      datasets: [{
+        label: 'Votes Submitted',
+        data: [0,0,0,0,0],
+        borderColor: "#e74c3c",
+        fill: true,
+        backgroundColor: "rgba(231,76,60,0.2)"
+      }]
+    },
+    options: { responsive: true }
   });
 }
 
-if(allElections.length>0){
+// Generate buttons for all elections
+if(allElections.length > 0){
   allElections.forEach(election=>{
     const btn = document.createElement('button');
-    btn.textContent = election.electionName;
-    btn.onclick=()=>showElectionCharts(election);
+    btn.textContent = election.title;
+    btn.onclick = () => showElectionCharts(election);
     electionList.appendChild(btn);
   });
+  // Show first election by default
   showElectionCharts(allElections[0]);
 } else {
-  chartContainer.innerHTML='<p style="text-align:center;">No elections created yet.</p>';
+  chartContainer.innerHTML = '<p style="text-align:center;">No elections created yet.</p>';
 }
 </script>
 </body>
