@@ -6,7 +6,7 @@ import type { UserRegistrationPayload } from '../types';
 import './SignUp.css';
 
 
-type FormErrors = Partial<Record<keyof UserRegistrationPayload | 'general' | 'surname', string>>;
+type FormErrors = Partial<Record<keyof UserRegistrationPayload | 'general' | 'surname' | 'confirmpassword', string>>;
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ const SignUp: React.FC = () => {
     studentId: '',  
     email: '',
     password: '',
+    confirmpassword: ''
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
@@ -37,6 +38,10 @@ const SignUp: React.FC = () => {
     if (!formData.studentId.trim()) err.studentId = 'ID Number is required.';
     if (!formData.email.trim()) err.email = 'Email is required.';
     if (!formData.password) err.password = 'Password is required.';
+    if (!formData.confirmpassword)
+      err.confirmpassword = 'Please confirm password.';
+    else if (formData.password !== formData.confirmpassword)
+      err.confirmpassword = 'Passwords do not match.';
     if (!formData.faculty) err.faculty = 'Faculty is required.';
     if (!formData.gender) err.gender = 'Gender is required.';
     if (!formData.yearOfStudy) err.yearOfStudy = 'Year of Study is required.';
@@ -113,14 +118,14 @@ const SignUp: React.FC = () => {
               <option value="">Select Gender</option>
               <option value="M">Male</option>
               <option value="F">Female</option>
-              <option value="O">Other</option>
+              <option value="O">Non-Binary</option>
             </select>
             {errors.gender && <span className="error-message">{errors.gender}</span>}
           </div>
           
           <div className="form-group">
-            <label htmlFor="yearOfStudy">Year of Study <span className="required">*</span></label>
-            <input type="number" id="yearOfStudy" name="yearOfStudy" value={formData.yearOfStudy} onChange={handleChange} required min="1" />
+            <label htmlFor="yearOfStudy">Year enrolled <span className="required">*</span></label>
+            <input type="number" id="yearOfStudy" name="yearOfStudy" value={formData.yearOfStudy} onChange={handleChange} required min="1950" max="2100" placeholder="2025" />
             {errors.yearOfStudy && <span className="error-message">{errors.yearOfStudy}</span>}
           </div>
         </div>
@@ -141,6 +146,12 @@ const SignUp: React.FC = () => {
           <label htmlFor="password">Password <span className="required">*</span></label>
           <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
           {errors.password && <span className="error-message">{errors.password}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="confirmpassword"> Confirm Password <span className="required">*</span></label>
+          <input type="password" id="confirmpassword" name="confirmpassword" value={formData.confirmpassword} onChange={handleChange} required />
+          {errors.confirmpassword && <span className="error-message">{errors.confirmpassword}</span>}
         </div>
 
         {errors.general && <div className="general-message error-alert">{errors.general}</div>}
