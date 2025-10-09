@@ -123,15 +123,6 @@ body {
   color: #a8071a;
 }
 
-/* Actions row: Forgot + Remember */
-.forgot-password {
-  position: static;
-  color: #3059d5;
-  font-size: 15px;
-  text-decoration: none;
-}
-.forgot-password:hover { text-decoration: underline; }
-
 /* Checkbox row – no giant margins */
 .remember-row {
   display: inline-flex;

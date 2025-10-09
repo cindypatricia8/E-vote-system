@@ -106,8 +106,7 @@ const LoginPage: React.FC = () => {
           />
           <label htmlFor="remember">Remember me</label>
         </div>
-        <a href="/forgot-password" className="forgot-password">Forgot Password</a>
-
+        
         <button type="submit" className="primary-btn" disabled={submitting}>
           {submitting ? 'Signing in...' : 'Sign in'}
         </button>
