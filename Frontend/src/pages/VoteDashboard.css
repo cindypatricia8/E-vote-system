@@ -21,6 +21,13 @@ body {
   padding: 10px 20px;
 }
 
+.alert-logo{
+  flex: 0 0 24px;                /* fixed icon size */
+  width: 24px;
+  height: 24px;
+  background: url("../images/v14_11.png") center / contain no-repeat;
+}
+
 .topbar-left {
   display: flex;
   align-items: center;

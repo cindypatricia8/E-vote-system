@@ -1,13 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './VoteDashboard.css';
 
-export default function ElectionDashboard() {
+const VoteDashboard: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
       {/* Top Bar */}
       <div className="topbar">
         <div className="topbar-left">
-          <img src="v19_2.png" alt="Monash University Logo" />
+          <div className="alert-logo" aria-hidden="true"></div>
         </div>
 
         <div className="topbar-center">
@@ -16,7 +19,13 @@ export default function ElectionDashboard() {
 
         <div className="topbar-right">
           <i className="fas fa-bell"></i>
-          <i className="fas fa-user-circle"></i>
+          <button
+            className="icon-button"
+            onClick={() => navigate('/login')}
+            aria-label="Login"
+          >
+            <i className="fas fa-user-circle"></i>
+          </button>
         </div>
       </div>
 
@@ -32,21 +41,31 @@ export default function ElectionDashboard() {
             <h2><i className="fas fa-clock"></i> Current Elections</h2>
             <div className="election-item current">
               <h3>MSA Election</h3>
-              <p className="election-date"><i className="far fa-calendar-alt"></i> October 15, 2023 - October 18, 2023</p>
-              <p>Student association election for the academic year 2023-2024</p>
+             <p className="election-date"><i className="far fa-calendar-alt"></i> October 15, 2025 - October 20, 2025</p>
+              <p>Student election 2025</p>
               <div className="action-buttons">
-                <button className="btn btn-view">View Details</button>
-                <button className="btn btn-results">Live Results</button>
+                <div className="action-buttons">
+                <button
+                  className="btn btn-view"
+                  onClick={() => navigate('/main-voting')}
+                >
+                  Nominate
+                </button>
               </div>
             </div>
 
             <div className="election-item current">
               <h3>Club Election</h3>
-              <p className="election-date"><i className="far fa-calendar-alt"></i> October 20, 2023 - October 22, 2023</p>
-              <p>Annual club leadership election for all student organizations</p>
+              <p className="election-date"><i className="far fa-calendar-alt"></i> October 20, 2025 - October 25, 2025</p>
+              <p>2025 club election</p>
               <div className="action-buttons">
-                <button className="btn btn-view">View Details</button>
-                <button className="btn btn-results">Live Results</button>
+                <div className="action-buttons">
+                <button
+                  className="btn btn-view"
+                  onClick={() => navigate('/main-voting')}
+                >
+                  Nominate
+                </button>
               </div>
             </div>
           </div>
@@ -56,11 +75,10 @@ export default function ElectionDashboard() {
             <h2><i className="fas fa-check-circle"></i> Finished Elections</h2>
             <div className="election-item finished">
               <h3>Club Election</h3>
-              <p className="election-date"><i className="far fa-calendar-alt"></i> September 10, 2023 - September 12, 2023</p>
-              <p>Previous club leadership election with 85% voter turnout</p>
+              <p className="election-date"><i className="far fa-calendar-alt"></i> May 10, 2025 - May 15, 2025</p>
+              <p>Previous club election</p>
               <div className="action-buttons">
                 <button className="btn btn-view">View Details</button>
-                <button className="btn btn-results">Final Results</button>
               </div>
             </div>
           </div>
@@ -70,29 +88,16 @@ export default function ElectionDashboard() {
             <h2><i className="fas fa-calendar-plus"></i> Upcoming Elections</h2>
             <div className="election-item upcoming">
               <h3>Club Election</h3>
-              <p className="election-date"><i className="far fa-calendar-alt"></i> November 5, 2023 - November 7, 2023</p>
-              <p>Next quarter club leadership election - nominations open</p>
+              <p className="election-date"><i className="far fa-calendar-alt"></i> November 5, 2025 - November 10, 2025</p>
+              <p>Yearly club election</p>
               <div className="action-buttons">
                 <button className="btn btn-view">View Details</button>
-                <button className="btn btn-edit">Nominate</button>
               </div>
             </div>
-
-            <div className="election-item upcoming">
-              <h3>Student Senate</h3>
-              <p className="election-date"><i className="far fa-calendar-alt"></i> December 1, 2023 - December 3, 2023</p>
-              <p>Annual student senate election for policy making body</p>
-              <div className="action-buttons">
-                <button className="btn btn-view">View Details</button>
-                <button className="btn btn-edit">Apply</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div className="divider"></div>
         <footer></footer>
       </div>
     </div>
   );
-}
+};
