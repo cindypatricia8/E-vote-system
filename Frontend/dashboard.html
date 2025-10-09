@@ -13,8 +13,8 @@ body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; display: 
 .sidebar ul li a { color: white; text-decoration: none; font-size: 16px; }
 .main { flex-grow: 1; padding: 20px; }
 h1 { margin-bottom: 20px; }
-.cards { display: flex; gap: 20px; margin-bottom: 30px; }
-.card { flex: 1; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); text-align: center; }
+.cards { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+.card { flex: 1; background: white; padding: 20px; border-radius: 10px; text-align: center; min-width: 200px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
 .card h3 { margin: 10px 0; font-size: 20px; }
 .card p { font-size: 24px; font-weight: bold; }
 .charts { display: flex; flex-wrap: wrap; gap: 30px; }
@@ -27,6 +27,8 @@ canvas { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2p
 .button-panel .analytics:hover { background: #2471a3; }
 .button-panel .system-admin { background: #16a085; }
 .button-panel .system-admin:hover { background: #13856e; }
+.button-panel .delete { background: #c0392b; }
+.button-panel .delete:hover { background: #922b21; }
 </style>
 </head>
 <body>
@@ -46,20 +48,21 @@ canvas { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2p
     <button class="new-election" onclick="window.location.href='create-election.html'">Create New Election</button>
     <button class="analytics" onclick="window.location.href='analytics.html'">Data Analytics</button>
     <button class="system-admin" onclick="window.location.href='system-admin.html'">System Admin</button>
+    <button class="delete" onclick="deleteAllElections()">Delete All Elections</button>
   </div>
 
   <div class="cards">
-    <div class="card" style="background:#27ae60; color:white;">
-      <h3>Participation</h3><p>64%</p>
+    <div class="card" id="participationCard" style="background:#27ae60; color:white;">
+      <h3>Participation</h3><p>0%</p>
     </div>
-    <div class="card" style="background:#2980b9; color:white;">
-      <h3>Total Voters</h3><p>1,961</p>
+    <div class="card" id="votersCard" style="background:#2980b9; color:white;">
+      <h3>Total Voters</h3><p>0</p>
     </div>
-    <div class="card" style="background:#e67e22; color:white;">
-      <h3>Ballots</h3><p>2</p>
+    <div class="card" id="ballotsCard" style="background:#e67e22; color:white;">
+      <h3>Ballots</h3><p>0</p>
     </div>
-    <div class="card" style="background:#8e44ad; color:white;">
-      <h3>Options</h3><p>266</p>
+    <div class="card" id="optionsCard" style="background:#8e44ad; color:white;">
+      <h3>Options</h3><p>0</p>
     </div>
   </div>
 
@@ -69,7 +72,7 @@ canvas { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2p
       <canvas id="barChart" height="200"></canvas>
     </div>
     <div style="flex:1;">
-      <h3>Vote Distribution</h3>
+      <h3>Votes per Election</h3>
       <canvas id="pieChart" height="200"></canvas>
     </div>
     <div style="flex:1; min-width:400px;">
@@ -80,40 +83,83 @@ canvas { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2p
 </div>
 
 <script>
-const candidates = ["Candidate A","Candidate B","Candidate C"];
-const votes = [120,90,60];
+// Load elections from localStorage
+let allElections = JSON.parse(localStorage.getItem('allElections') || '[]');
 
-new Chart(document.getElementById("barChart"), {
-  type: "bar",
-  data: {
-    labels: candidates,
-    datasets: [{ label: "Votes", data: votes, backgroundColor: ["#3498db","#2ecc71","#f1c40f"] }]
-  },
-  options: { responsive: true, scales: { y: { beginAtZero: true } } }
-});
+// Aggregate data
+let totalBallots = allElections.length;
+let totalOptions = 0;
+let candidateNames = [], candidateVotes = [];
 
-new Chart(document.getElementById("pieChart"), {
-  type: "pie",
-  data: {
-    labels: candidates,
-    datasets: [{ label: "Vote Share", data: votes, backgroundColor: ["#3498db","#2ecc71","#f1c40f"] }]
+allElections.forEach(election => {
+  if(election.candidates){
+    totalOptions += election.candidates.length;
+    election.candidates.forEach(c => {
+      candidateNames.push(c.name);
+      candidateVotes.push(0); // start at 0 votes
+    });
   }
 });
 
-new Chart(document.getElementById("lineChart"), {
-  type: "line",
+// Participation & voters (separate, backend connected later)
+let totalVoters = 0;
+let participation = 0;
+
+// Update cards
+document.querySelector("#participationCard p").textContent = `${participation}%`;
+document.querySelector("#votersCard p").textContent = totalVoters;
+document.querySelector("#ballotsCard p").textContent = totalBallots;
+document.querySelector("#optionsCard p").textContent = totalOptions;
+
+// Bar Chart: Votes by candidate (starts blank)
+new Chart(document.getElementById("barChart"), {
+  type:'bar',
+  data:{
+    labels:candidateNames.length?candidateNames:['No Data'],
+    datasets:[{
+      label:'Votes',
+      data:candidateVotes.length?candidateVotes:[0],
+      backgroundColor:["#3498db","#2ecc71","#f1c40f","#e67e22","#9b59b6"]
+    }]
+  },
+  options:{ responsive:true, scales:{ y:{ beginAtZero:true }} }
+});
+
+// Pie Chart: Votes per election
+let electionNames = allElections.map(e => e.title);
+let electionVotes = allElections.map(e => 0); // blank until votes come in
+new Chart(document.getElementById("pieChart"), {
+  type: 'pie',
   data: {
-    labels: ["9AM","11AM","1PM","3PM","5PM"],
+    labels: electionNames.length ? electionNames : ['No Elections'],
     datasets: [{
-      label: "Votes Submitted",
-      data: [10,45,90,150,180],
-      borderColor: "#e74c3c",
-      fill: true,
-      backgroundColor: "rgba(231,76,60,0.2)"
+      label: 'Votes per Election',
+      data: electionVotes.length ? electionVotes : [0],
+      backgroundColor: electionNames.map((_,i) => ["#3498db","#2ecc71","#f1c40f","#e67e22","#9b59b6"][i % 5])
     }]
   },
   options: { responsive: true }
 });
+
+// Line Chart: Votes over time (starts blank)
+let timeLabels = ["9AM","11AM","1PM","3PM","5PM"];
+new Chart(document.getElementById("lineChart"), {
+  type:'line',
+  data:{ labels:timeLabels, datasets:[{label:'Votes Submitted', data:[0,0,0,0,0], borderColor:"#e74c3c", fill:true, backgroundColor:"rgba(231,76,60,0.2)"}] },
+  options:{ responsive:true }
+});
+
+// Auto-update when localStorage changes
+window.addEventListener('storage', ()=>location.reload());
+
+// Function to delete all elections
+function deleteAllElections() {
+  if(confirm("Are you sure you want to delete all elections? This cannot be undone.")) {
+    localStorage.removeItem('allElections');
+    alert("All elections deleted.");
+    location.reload();
+  }
+}
 </script>
 </body>
 </html>
