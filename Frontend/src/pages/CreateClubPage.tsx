@@ -10,7 +10,6 @@ interface FormData {
     clubDescription: string;
 }
 
-
 export default function CreateClubPage() {
     const navigate = useNavigate();
     

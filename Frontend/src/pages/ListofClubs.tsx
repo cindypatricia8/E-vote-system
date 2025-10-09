@@ -1,16 +1,18 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getAllClubs } from "../api/apiService";
 import "./ListofClubs.css";
+import { Club } from "../types";
 
 type Mode = "general" | "club";
 
+//Demo data
 type Club = {
   id: string;
   name: string;
   desc: string;
 };
 
-//Demo data
 const CLUBS: Club[] = [
   { id: "art",        name: "Art Society",       desc: "Design, drawing & exhibits" },
   { id: "robotics",   name: "Robotics Club",     desc: "Build & compete" },
@@ -74,6 +76,19 @@ function ClubButton({
 
 export default function Clubs() {
   const [mode, setMode] = useState<Mode>("general");
+  const [clubs, setClubs] = useState<Club[]>([]);
+
+  // useEffect(() => {
+  //        const fetchClubs = async () => {
+  //            try {
+  //                const response = await getAllClubs(); 
+  //                setManagedClubs(response.data.data.clubs);
+  //            } catch (err) {
+  //                setError('Failed to load your clubs.');
+  //            }
+  //        };
+  //        fetchClubs();
+  //    }, []);
 
   function handleOpenClub(club: Club) {
     // Replace with navigation or modal opening
