@@ -19,7 +19,7 @@ const SignUp: React.FC = () => {
     studentId: '',  
     email: '',
     password: '',
-    confirmpassword; '',
+    confirmpassword: ''
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
