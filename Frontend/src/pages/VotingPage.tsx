@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ImageSlider, type Candidate, type Position } from "../components/ImageSlider";
-import "./main-voting.css";
+//import "./main-voting.css";
 
 import presidentA from "../images/presidentA.jpg";
 import presidentB from "../images/presidentB.jpg";

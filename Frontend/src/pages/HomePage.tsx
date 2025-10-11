@@ -1,8 +1,9 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import { getAllClubs } from "../api/apiService";
-import "./ListofClubs.css";
-import { Club } from "../types";
+import "./HomePage.css";
+import type  { Club } from "../types";
 
 type Mode = "general" | "club";
 
@@ -19,6 +20,8 @@ const CLUBS: Club[] = [
   { id: "sports",     name: "Sports Council",    desc: "Leagues & training" },
   { id: "coding",     name: "Coding Circle",     desc: "Hack nights & projects" },
 ]
+
+
 
 // Hard-coded
 const USER_ASSIGNED = new Set<string>(["robotics", "coding"]);
@@ -89,6 +92,7 @@ export default function Clubs() {
   //        };
   //        fetchClubs();
   //    }, []);
+  const navigate = useNavigate();
 
   function handleOpenClub(club: Club) {
     // Replace with navigation or modal opening
@@ -101,7 +105,9 @@ export default function Clubs() {
         <h1>Clubs</h1>
       
         <div className="spacer" />
-        <SegmentedToggle mode={mode} onChange={setMode} />
+        <button type="button" onClick={() => navigate('/admin/dashboard')} className="admin">
+          Admin
+        </button>
       </header>
 
       <main className="grid" aria-label="Clubs">

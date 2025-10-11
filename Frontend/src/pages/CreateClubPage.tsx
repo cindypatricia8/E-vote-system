@@ -33,7 +33,7 @@ const CreateClubPage: React.FC = () =>  {
             try {
                 const response = await searchUsers(searchQuery);
                 const availableUsers = response.data.data.users.filter(
-                    user => !selectedAdmins.some(admin => admin._id === user._id)
+                    user => !selectedAdmins.some(admin => admin._id === user._id) // filter current user from list
                 );
                 setSearchResults(availableUsers);
             } catch (error) {

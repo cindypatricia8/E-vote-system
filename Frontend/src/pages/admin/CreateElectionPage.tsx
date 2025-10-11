@@ -1,149 +1,234 @@
-import React, { useState, useEffect, } from 'react';
-import type {  ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getManagedClubs, searchUsers, createElection } from '../../api/apiService'; 
-import type { Club, User } from '../../types';
+import { getManagedClubs, createElection } from '../../api/apiService';
+import type { Club, User, CreateElectionPayload } from '../../types';
+import UserSearchInput from '../../components/UserSearchInput';
+import './AdminDashboard.css'; 
 
+// Define more specific types for our component's internal state
+interface CandidateState {
+  user: User | null; // Store the full user object for display purposes
+  statement: string;
+}
 
-const CreateElectionPage: React.FC = () =>  {
-    const navigate = useNavigate();
+interface PositionState {
+  title: string;
+  maxSelections: number;
+  candidates: CandidateState[];
+}
+
+const CreateElectionPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  // --- Component State ---
+  const [title, setTitle] = useState('');
+  const [clubId, setClubId] = useState('');
+  const [description, setDescription] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  
+  // State for the dynamic positions and candidates
+  const [positions, setPositions] = useState<PositionState[]>([
+    { title: '', maxSelections: 1, candidates: [{ user: null, statement: '' }] }
+  ]);
+  
+  const [managedClubs, setManagedClubs] = useState<Club[]>([]);
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  // Fetch the clubs this admin manages when the component loads
+  useEffect(() => {
+    const fetchClubs = async () => {
+      try {
+        const response = await getManagedClubs();
+        setManagedClubs(response.data.data.clubs);
+      } catch (err) {
+        setError('Failed to load your managed clubs. Please try again.');
+      }
+    };
+    fetchClubs();
+  }, []);
+
+  // --- Dynamic Form Handlers ---
+
+  const addPosition = () => {
+    setPositions([...positions, { title: '', maxSelections: 1, candidates: [{ user: null, statement: '' }] }]);
+  };
+
+  const addCandidate = (positionIndex: number) => {
+    const newPositions = [...positions];
+    newPositions[positionIndex].candidates.push({ user: null, statement: '' });
+    setPositions(newPositions);
+  };
+
+  const handlePositionChange = (index: number, field: 'title' | 'maxSelections', value: string) => {
+    const newPositions = [...positions];
+    if (field === 'maxSelections') {
+      newPositions[index][field] = parseInt(value, 10) || 1;
+    } else {
+      newPositions[index][field] = value;
+    }
+    setPositions(newPositions);
+  };
+
+  const handleSelectCandidate = (posIndex: number, candIndex: number, selectedUser: User) => {
+    const newPositions = [...positions];
+    newPositions[posIndex].candidates[candIndex].user = selectedUser;
+    setPositions(newPositions);
+  };
+
+  const handleCandidateStatementChange = (posIndex: number, candIndex: number, value: string) => {
+    const newPositions = [...positions];
+    newPositions[posIndex].candidates[candIndex].statement = value;
+    setPositions(newPositions);
+  };
+  
+  const handleRemoveCandidate = (posIndex: number, candIndex: number) => {
+    const newPositions = [...positions];
+    // Clearing the user allows the search input to reappear
+    newPositions[posIndex].candidates[candIndex].user = null; 
+    setPositions(newPositions);
+  };
+
+  // --- Form Submission ---
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    // Basic validation
+    if (!title || !clubId || !startTime || !endTime || positions.length === 0) {
+      setError('Please fill in all required fields: Name, Club, Start Date, and End Date.');
+      return;
+    }
+    if (new Date(startTime) >= new Date(endTime)) {
+      setError('The end date must be after the start date.');
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      // Transform the component's state into the format the API expects
+      const payload: CreateElectionPayload = {
+        title,
+        clubId,
+        description,
+        startTime,
+        endTime,
+        positions: positions.map(p => ({
+          title: p.title,
+          maxSelections: p.maxSelections,
+          // Filter out any empty candidate slots and map to the correct format
+          candidates: p.candidates
+            .filter(c => c.user) 
+            .map(c => ({
+              candidateId: c.user!._id, // The ! asserts that c.user is not null here
+              statement: c.statement,
+            })),
+        })).filter(p => p.title.trim() !== '' && p.candidates.length > 0), // Also filter out empty positions
+      };
+      
+      if (payload.positions.length === 0) {
+        setError('You must create at least one position with a title and a valid candidate.');
+        setSubmitting(false);
+        return;
+      }
+
+      const response = await createElection(payload);
+      navigate(`/admin/election-live/${response.data.data.election._id}`);
+
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to create the election.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
     
-    // Form State
-    const [title, setTitle] = useState('');
-    const [clubId, setClubId] = useState('');
-    const [description, setDescription] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [positions, setPositions] = useState([
-        { title: '', maxSelections: 1, candidates: [{ candidateId: '', statement: '' }] }
-    ]);
-
-    // Data-fetching state
-    const [managedClubs, setManagedClubs] = useState<Club[]>([]);
-    const [userSearchResults, setUserSearchResults] = useState<User[]>([]);
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const [error, setError] = useState('');
-    const [submitting, setSubmitting] = useState(false);
-
-    // Fetch clubs this admin manages
-    useEffect(() => {
-        const fetchClubs = async () => {
-            try {
-                const response = await getManagedClubs(); 
-                setManagedClubs(response.data.data.clubs);
-            } catch (err) {
-                setError('Failed to load your clubs.');
-            }
-        };
-        fetchClubs();
-    }, []);
-
-    // --- Dynamic Form Handlers ---
-    const addPosition = () => {
-        setPositions([...positions, { title: '', maxSelections: 1, candidates: [{ candidateId: '', statement: '' }] }]);
-    };
-    
-    const addCandidate = (positionIndex: number) => {
-        const newPositions = [...positions];
-        newPositions[positionIndex].candidates.push({ candidateId: '', statement: '' });
-        setPositions(newPositions);
-    };
-
-    const handlePositionChange = (index: number, value: string) => {
-        const newPositions = [...positions];
-        newPositions[index].title = value;
-        setPositions(newPositions);
-    };
-
-    const handleCandidateChange = (posIndex: number, candIndex: number, field: 'candidateId' | 'statement', value: string) => {
-        const newPositions = [...positions];
-        newPositions[posIndex].candidates[candIndex][field] = value;
-        setPositions(newPositions);
-    };
-
-    // --- Form Submission ---
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-        setError('');
-        if (!title || !clubId || !startTime || !endTime || positions.length === 0) {
-            setError('Please fill in all required fields.');
-            return;
-        }
-
-        setSubmitting(true);
-        try {
-            const payload = { title, clubId, description, startTime, endTime, positions };
-            const response = await createElection(payload);
-            const newElectionId = response.data.data.election._id;
-            navigate(`/admin/election-live/${newElectionId}`);
-        } catch (err: any) {
-            setError(err.response?.data?.message || 'Failed to create election.');
-        } finally {
-            setSubmitting(false);
-        }
-    };
-    
-    return (
-        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-3xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6 text-center text-indigo-700">Create a New Election</h1>
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Election Details */}
-                <div>
-                    <label className="block text-gray-700 font-medium mb-2">Election Name</label>
-                    <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Annual Executive Election" />
+  return (
+    <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-4xl mx-auto my-8">
+      <h1 className="text-3xl font-bold mb-6 text-center text-indigo-700">Create a New Election</h1>
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* --- Section 1: Election Details --- */}
+        <div className="p-4 border border-gray-200 rounded-lg space-y-4">
+            <h2 className="text-xl font-semibold text-gray-800">Election Details</h2>
+            <div>
+                <label className="block text-gray-700 font-medium mb-2">Election Name*</label>
+                <input type="text" value={title} onChange={e => setTitle(e.target.value)} className="form-input" placeholder="e.g., Annual Executive Election" />
+            </div>
+            <div>
+                <label className="block text-gray-700 font-medium mb-2">Select Club*</label>
+                <select value={clubId} onChange={e => setClubId(e.target.value)} className="form-input">
+                    <option value="">-- Select a Club You Manage --</option>
+                    {managedClubs.map(club => <option key={club._id} value={club._id}>{club.name}</option>)}
+                </select>
+            </div>
+            <div className="flex space-x-4">
+                <div className="flex-1">
+                    <label className="block text-gray-700 font-medium mb-2">Start Date*</label>
+                    <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} className="form-input" />
                 </div>
-                <div>
-                    <label className="block text-gray-700 font-medium mb-2">Select Club</label>
-                    <select value={clubId} onChange={e => setClubId(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="">-- Select a Club --</option>
-                        {managedClubs.map(club => <option key={club._id} value={club._id}>{club.name}</option>)}
-                    </select>
+                <div className="flex-1">
+                    <label className="block text-gray-700 font-medium mb-2">End Date*</label>
+                    <input type="datetime-local" value={endTime} onChange={e => setEndTime(e.target.value)} className="form-input" />
                 </div>
-                <div className="flex space-x-4">
-                    <div className="flex-1">
-                        <label className="block text-gray-700 font-medium mb-2">Start Date</label>
-                        <input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    </div>
-                    <div className="flex-1">
-                        <label className="block text-gray-700 font-medium mb-2">End Date</label>
-                        <input type="datetime-local" value={endTime} onChange={e => setEndTime(e.target.value)} className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                    </div>
-                </div>
-                <div>
-                    <label className="block text-gray-700 font-medium mb-2">Description (optional)</label>
-                    <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} placeholder="Details about this election..." className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                </div>
-
-                {/* Positions & Candidates */}
-                <hr/>
-                {positions.map((pos, pIndex) => (
-                    <div key={pIndex} className="p-4 border border-gray-200 rounded-lg space-y-4">
-                        <label className="block text-gray-700 font-bold">Position {pIndex + 1}</label>
-                        <input type="text" value={pos.title} onChange={e => handlePositionChange(pIndex, e.target.value)} placeholder="e.g., President" className="w-full border border-gray-300 rounded-lg p-2" />
-                        
-                        {pos.candidates.map((cand, cIndex) => (
-                            <div key={cIndex} className="flex space-x-2 items-center">
-                                {/* NEED TO ADD SEARCH USER */}
-                                <input type="text" value={cand.candidateId} onChange={e => handleCandidateChange(pIndex, cIndex, 'candidateId', e.target.value)} placeholder="Candidate User ID" className="flex-1 border border-gray-300 rounded-lg p-2" />
-                                <input type="text" value={cand.statement} onChange={e => handleCandidateChange(pIndex, cIndex, 'statement', e.target.value)} placeholder="Mission Statement" className="flex-1 border border-gray-300 rounded-lg p-2" />
-                            </div>
-                        ))}
-                        <button type="button" onClick={() => addCandidate(pIndex)} className="text-sm text-indigo-600 hover:text-indigo-800">+ Add Candidate</button>
-                    </div>
-                ))}
-                <button type="button" onClick={addPosition} className="w-full mt-2 p-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50">+ Add another Position</button>
-                
-                {error && <p className="text-red-500 text-center">{error}</p>}
-                
-                <div className="text-center pt-4">
-                    <button type="submit" disabled={submitting} className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition disabled:bg-indigo-300">
-                        {submitting ? 'Creating...' : 'Create Election'}
-                    </button>
-                </div>
-            </form>
+            </div>
+            <div>
+                <label className="block text-gray-700 font-medium mb-2">Description (optional)</label>
+                <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} placeholder="Details about this election..." className="form-input"></textarea>
+            </div>
         </div>
-    );
+
+        {/* --- Section 2: Positions & Candidates --- */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-gray-800">Positions & Candidates</h2>
+          {positions.map((pos, pIndex) => (
+            <div key={pIndex} className="p-4 border border-gray-200 rounded-lg space-y-4 bg-gray-50">
+              <input type="text" value={pos.title} onChange={e => handlePositionChange(pIndex, 'title', e.target.value)} placeholder={`Position Title (e.g., President)*`} className="form-input font-semibold" />
+              
+              <label className="text-sm font-medium text-gray-600">Candidates for "{pos.title || `Position ${pIndex + 1}`}"</label>
+              {pos.candidates.map((cand, cIndex) => (
+                <div key={cIndex} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items-center">
+                  <div className="flex-1 w-full">
+                    {cand.user ? (
+                      <div className="admin-pill" style={{ backgroundColor: '#e0e7ff', color: '#4338ca', justifyContent: 'space-between', width: '100%', padding: '0.65rem 1rem' }}>
+                        <span>{cand.user.name} ({cand.user.studentId})</span>
+                        <button type="button" onClick={() => handleRemoveCandidate(pIndex, cIndex)}>×</button>
+                      </div>
+                    ) : (
+                      <UserSearchInput
+                        onUserSelect={(user) => handleSelectCandidate(pIndex, cIndex, user)}
+                        placeholder="Search for a candidate..."
+                        excludeIds={pos.candidates.map(c => c.user?._id).filter(Boolean) as string[]}
+                      />
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    value={cand.statement}
+                    onChange={e => handleCandidateStatementChange(pIndex, cIndex, e.target.value)}
+                    placeholder="Mission Statement (optional)"
+                    className="flex-1 w-full border border-gray-300 rounded-lg p-2"
+                  />
+                </div>
+              ))}
+              <button type="button" onClick={() => addCandidate(pIndex)} className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">+ Add Candidate to this Position</button>
+            </div>
+          ))}
+          <button type="button" onClick={addPosition} className="w-full mt-2 p-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:bg-gray-50">+ Add another Position</button>
+        </div>
+        
+        {error && <p className="text-red-500 text-center font-semibold">{error}</p>}
+        
+        <div className="text-center pt-4">
+          <button type="submit" disabled={submitting} className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition disabled:bg-indigo-300">
+            {submitting ? 'Creating...' : 'Create Election'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default CreateElectionPage;

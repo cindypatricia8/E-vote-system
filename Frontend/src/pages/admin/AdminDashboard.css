@@ -120,3 +120,80 @@
   border-radius: 8px;
   color: #aaa;
 }
+
+/* Candidate search settings */
+.candidate-search-container {
+    position: relative;
+}
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+}
+
+.search-result-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+}
+.search-result-item:hover {
+    background-color: var(--accent-blue);
+    color: var(--text-primary);
+}
+.search-result-item .student-id {
+    font-size: 0.875rem;
+    color: var(--text-placeholder);
+    margin-left: 0.5rem;
+}
+.search-result-item:hover .student-id {
+    color: var(--text-primary);
+}
+.search-empty-state {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.selected-candidate-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.candidate-pill {
+    display: flex;
+    align-items: center;
+    background-color: var(--accent-blue);
+    color: white;
+    padding: 0.3rem 0.5rem 0.3rem 0.8rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+.candidate-pill button {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    margin-left: 0.5rem;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.candidate-pill button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}

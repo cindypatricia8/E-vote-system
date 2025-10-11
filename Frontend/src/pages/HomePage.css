@@ -61,3 +61,11 @@ body { margin: 0; font: 16px/1.45 system-ui, Segoe UI, Roboto, Helvetica, Arial,
   opacity: .45; cursor: not-allowed; filter: grayscale(.15);
 }
 .club[aria-disabled="true"]:hover { transform: none; }
+
+.admin {
+  position: static;
+  color: #3059d5;
+  font-size: 15px;
+  text-decoration: none;
+}
+.admin:hover { text-decoration: underline; }

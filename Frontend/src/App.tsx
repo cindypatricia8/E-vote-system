@@ -4,9 +4,9 @@ import { Routes, Route } from 'react-router-dom';
 
 import Login from './pages/login';
 import SignUp from './pages/signUp';
-import ElectionDashboard from './pages/ElectionDashboard';
+//import ElectionDashboard from './pages/ElectionDashboard';
 import votepagetest from './pages/voting';
-import MainVoting from './pages/VotingPage';
+import VotingPage from './pages/VotingPage';
 import CreateClubPage from './pages/CreateClubPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateElectionPage from './pages/admin/CreateElectionPage';
@@ -20,12 +20,14 @@ function App() {
     <div className="App">
       <Routes>
         {/* --- Public & Main Routes --- */}
-        <Route path="/" element={<HomePage />} />
+        {/* homepage with clubs user is in */}
+        <Route path="/" element={<HomePage />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
         
+        
         <Route path="/voting" element={<VotingPage />} />
-        <Route path="/voting-dashboard" element={<VotingDashboard />} />
+        {/* <Route path="/election-dashboard" element={<ElectionDashboard />} /> */}
         <Route path="/create-club" element={<CreateClubPage />} />
 
         <Route path="/admin" element={<AdminLayout />}>
