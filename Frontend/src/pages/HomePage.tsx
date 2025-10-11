@@ -1,53 +1,122 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './HomePage.css'; 
 
-export default function HomePage() {
+import { useState, useEffect } from "react";
+import { getAllClubs } from "../api/apiService";
+import "./ListofClubs.css";
+import { Club } from "../types";
+
+type Mode = "general" | "club";
+
+//Demo data
+type Club = {
+  id: string;
+  name: string;
+  desc: string;
+};
+
+const CLUBS: Club[] = [
+  { id: "art",        name: "Art Society",       desc: "Design, drawing & exhibits" },
+  { id: "robotics",   name: "Robotics Club",     desc: "Build & compete" },
+  { id: "sports",     name: "Sports Council",    desc: "Leagues & training" },
+  { id: "coding",     name: "Coding Circle",     desc: "Hack nights & projects" },
+]
+
+// Hard-coded
+const USER_ASSIGNED = new Set<string>(["robotics", "coding"]);
+
+function SegmentedToggle({
+  mode,
+  onChange,
+}: {
+  mode: Mode;
+  onChange: (m: Mode) => void;
+}) {
   return (
-    <div className="home-container">
-      <div className="home-content">
-        <h1>E-Voting System Portal</h1>
-        <p>Your secure platform for university club elections.</p>
-        
-        <div className="disclaimer-box">
-          <span>⚠️</span>
-          <p>
-            <strong>Temporary Homepage:</strong> This page is a placeholder for development and testing. The final user homepage is currently under construction.
-          </p>
-        </div>
+    <div className="seg" role="tablist" aria-label="Admin mode">
+      <button
+        role="tab"
+        aria-selected={mode === "general"}
+        onClick={() => onChange("general")}
+      >
+        General Admin
+      </button>
+      <button
+        role="tab"
+        aria-selected={mode === "club"}
+        onClick={() => onChange("club")}
+      >
+        Club Admin
+      </button>
+    </div>
+  );
+}
 
-        <div className="link-groups">
-          {/* Group 1: User Authentication */}
-          <div className="link-group">
-            <h2 className="link-group-title">User Account</h2>
-            <div className="nav-links">
-              <Link to="/login" className="nav-button nav-button-primary">Login</Link>
-              <Link to="/register" className="nav-button nav-button-secondary">Register</Link>
-            </div>
-          </div>
-
-          {/* Group 2: Main User Pages */}
-          <div className="link-group">
-            <h2 className="link-group-title">Voting Area</h2>
-            <div className="nav-links">
-              <Link to="/voting" className="nav-button nav-button-secondary">Go to Voting Page</Link>
-              <Link to="/voting-dashboard" className="nav-button nav-button-secondary">Voting Dashboard</Link>
-            </div>
-          </div>
-          
-          {/* Group 3: Admin Pages */}
-          <div className="link-group">
-            <h2 className="link-group-title">Admin Testing Pages</h2>
-            <div className="nav-links">
-              <Link to="/admin/dashboard" className="nav-button nav-button-secondary">Admin Dashboard</Link>
-              <Link to="/create-club" className="nav-button nav-button-secondary">Create Club Page</Link>
-              <Link to="/admin/create-election" className="nav-button nav-button-secondary">Create Election Page</Link>
-            </div>
-          </div>
-        </div>
-    
-
+function ClubButton({
+  club,
+  allowed,
+  onOpen,
+}: {
+  club: Club;
+  allowed: boolean;
+  onOpen: (c: Club) => void;
+}) {
+  return (
+    <button
+      className="club"
+      aria-label={club.name + (allowed ? "" : " (not assigned)")}
+      aria-disabled={!allowed}
+      onClick={() => allowed && onOpen(club)}
+    >
+      <div className="club-text">
+        <div className="name">{club.name}</div>
+        <div className="desc">{club.desc}</div>
       </div>
+    </button>
+  );
+}
+
+export default function Clubs() {
+  const [mode, setMode] = useState<Mode>("general");
+  const [clubs, setClubs] = useState<Club[]>([]);
+
+  // useEffect(() => {
+  //        const fetchClubs = async () => {
+  //            try {
+  //                const response = await getAllClubs(); 
+  //                setManagedClubs(response.data.data.clubs);
+  //            } catch (err) {
+  //                setError('Failed to load your clubs.');
+  //            }
+  //        };
+  //        fetchClubs();
+  //    }, []);
+
+  function handleOpenClub(club: Club) {
+    // Replace with navigation or modal opening
+    alert(`${mode === "general" ? "Opening" : "Managing"}: ${club.name}`);
+  }
+
+  return (
+    <div className="wrap">
+      <header className="topbar">
+        <h1>Clubs</h1>
+      
+        <div className="spacer" />
+        <SegmentedToggle mode={mode} onChange={setMode} />
+      </header>
+
+      <main className="grid" aria-label="Clubs">
+        {CLUBS.map((club) => {
+          const allowed = mode === "general" || USER_ASSIGNED.has(club.id);
+          return (
+            <ClubButton
+              key={club.id}
+              club={club}
+              allowed={allowed}
+              onOpen={handleOpenClub}
+            />
+          );
+        })}
+      </main>
     </div>
   );
 }

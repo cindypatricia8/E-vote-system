@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import type { ChangeEvent, FormEvent, } from 'react';
+import type { FormEvent, } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { createClub, searchUsers } from '../api/apiService';
 import type { User } from '../types';
 import './CreateClubPage.css';
 
-interface FormData {
-    clubName: string;
-    clubDescription: string;
-}
 
-export default function CreateClubPage() {
+const CreateClubPage: React.FC = () =>  {
     const navigate = useNavigate();
     
     const [formData, setFormData] = useState({ clubName: '', clubDescription: '' });
@@ -181,3 +177,5 @@ export default function CreateClubPage() {
         </div>
     );
 }
+
+export default CreateClubPage;

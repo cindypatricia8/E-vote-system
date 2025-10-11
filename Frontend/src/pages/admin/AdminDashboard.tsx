@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
-export default function AdminDashboard() {
+const AdminDashboard: React.FC = () =>  {
   const navigate = useNavigate();
 
   return (
@@ -46,3 +46,5 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+export default AdminDashboard;

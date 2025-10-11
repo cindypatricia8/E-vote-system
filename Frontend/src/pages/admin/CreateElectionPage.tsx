@@ -5,7 +5,7 @@ import { getManagedClubs, searchUsers, createElection } from '../../api/apiServi
 import type { Club, User } from '../../types';
 
 
-export default function CreateElectionPage() {
+const CreateElectionPage: React.FC = () =>  {
     const navigate = useNavigate();
     
     // Form State
@@ -145,3 +145,5 @@ export default function CreateElectionPage() {
         </div>
     );
 }
+
+export default CreateElectionPage;

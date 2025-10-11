@@ -4,9 +4,9 @@ import { Routes, Route } from 'react-router-dom';
 
 import Login from './pages/login';
 import SignUp from './pages/signUp';
-import VotingDashboard from './pages/VoteDashboard';
-import VotingPage from './pages/voting';
-import MainVoting from './pages/main-voting';
+import ElectionDashboard from './pages/ElectionDashboard';
+import votepagetest from './pages/voting';
+import MainVoting from './pages/VotingPage';
 import CreateClubPage from './pages/CreateClubPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateElectionPage from './pages/admin/CreateElectionPage';
