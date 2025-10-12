@@ -143,10 +143,25 @@ const deleteElection = async (req, res) => {
     }
 };
 
+
+/**
+ * Finds all elections under a club
+ */
+const getElectionsForClub = async (req, res) => {
+    try {
+        const { clubId } = req.params;
+        const elections = await electionQueries.findElectionsByClub(clubId);
+        res.status(200).json({ status: 'success', data: { elections } });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching club elections.', error: error.message });
+    }
+};
+
 module.exports = {
     createElection,
     getActiveElections,
     getElectionById,
     updateElection,
     deleteElection,
+    getElectionsForClub,
 };
