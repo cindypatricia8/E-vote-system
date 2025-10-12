@@ -84,6 +84,8 @@ export const getActiveElections = () =>
 export const getElectionById = (electionId: string) =>
     api.get<{ status: 'success', data: { election: Election } }>(`/elections/${electionId}`);
 
+export const getElectionsByClub = (clubId: string) =>
+    api.get<{ status: 'success', data: { elections: Election[] } }>(`/elections/club/${clubId}`);
 
 // VOTE API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
