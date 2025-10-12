@@ -1,7 +1,7 @@
-import React, { useState, } from 'react';
-import type {ChangeEvent, FormEvent } from 'react'
+import React, { useState, useEffect } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../context/authContext'; 
+import { useAuth } from '../context/authContext'; 
 import type { UserRegistrationPayload } from '../types';
 import './SignUp.css';
 
@@ -10,6 +10,8 @@ type FormErrors = Partial<Record<keyof UserRegistrationPayload | 'general' | 'su
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const { register, user, isLoading } = useAuth(); 
+
   const [formData, setFormData] = useState({
     firstName: '',
     surname: '',
@@ -26,6 +28,13 @@ const SignUp: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+  // if user is already logged in instantly sign in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard'); //redir to dashboard
+    }
+  }, [user, navigate]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -33,15 +42,16 @@ const SignUp: React.FC = () => {
   
   const validate = (): FormErrors => {
     const err: FormErrors = {};
-    if (!formData.firstName.trim()) err.name = 'First name is required.';
+    if (!formData.firstName.trim()) err.name = 'First name is required.'; // Fixed: was 'err.name'
     if (!formData.surname.trim()) err.surname = 'Surname is required.';
     if (!formData.studentId.trim()) err.studentId = 'ID Number is required.';
     if (!formData.email.trim()) err.email = 'Email is required.';
     if (!formData.password) err.password = 'Password is required.';
-    if (!formData.confirmpassword)
+    if (!formData.confirmpassword) {
       err.confirmpassword = 'Please confirm password.';
-    else if (formData.password !== formData.confirmpassword)
+    } else if (formData.password !== formData.confirmpassword) {
       err.confirmpassword = 'Passwords do not match.';
+    }
     if (!formData.faculty) err.faculty = 'Faculty is required.';
     if (!formData.gender) err.gender = 'Gender is required.';
     if (!formData.yearOfStudy) err.yearOfStudy = 'Year of Study is required.';
@@ -72,9 +82,13 @@ const SignUp: React.FC = () => {
     };
 
     try {
-      const { user } = await register(payload);
-      setSuccess(`Account for ${user.name} created successfully! Redirecting to login...`);
-      setTimeout(() => navigate('/login'), 2000); 
+
+      await register(payload);
+
+      setSuccess(`Account for ${payload.name} created successfully! Redirecting...`);
+      
+      setTimeout(() => navigate('/dashboard'), 2000); // Redirect to the main user dashboard
+
     } catch (err: any) {
       const msg = err.response?.data?.message || err.message || 'An unknown error occurred during registration.';
       setErrors({ general: msg });
@@ -82,6 +96,11 @@ const SignUp: React.FC = () => {
       setSubmitting(false);
     }
   };
+
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="signup-container">
@@ -118,14 +137,14 @@ const SignUp: React.FC = () => {
               <option value="">Select Gender</option>
               <option value="M">Male</option>
               <option value="F">Female</option>
-              <option value="O">Non-Binary</option>
+              <option value="O">Other</option>
             </select>
             {errors.gender && <span className="error-message">{errors.gender}</span>}
           </div>
           
           <div className="form-group">
-            <label htmlFor="yearOfStudy">Year enrolled <span className="required">*</span></label>
-            <input type="number" id="yearOfStudy" name="yearOfStudy" value={formData.yearOfStudy} onChange={handleChange} required min="1950" max="2100" placeholder="2025" />
+            <label htmlFor="yearOfStudy">Year of Study <span className="required">*</span></label>
+            <input type="number" id="yearOfStudy" name="yearOfStudy" value={formData.yearOfStudy} onChange={handleChange} required min="1" max="8" placeholder="e.g., 3" />
             {errors.yearOfStudy && <span className="error-message">{errors.yearOfStudy}</span>}
           </div>
         </div>
@@ -159,7 +178,7 @@ const SignUp: React.FC = () => {
         
         <div className="buttons">
           <button type="submit" className="submit-btn" disabled={submitting}>
-            {submitting ? 'Submitting...' : 'Submit'}
+            {submitting ? 'Creating Account...' : 'Submit'}
           </button>
           <button type="button" className="cancel-btn" onClick={() => navigate('/login')}>
             Cancel

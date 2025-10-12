@@ -12,7 +12,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import CreateElectionPage from './pages/admin/CreateElectionPage';
 import ElectionLivePage from './pages/admin/ElectionLivePage';
 import AdminLayout from './pages/admin/AdminLayout';
-import HomePage from './pages/HomePage';
+import UserDashboard from './pages/UserDashboard';
 
 
 function App() {
@@ -20,8 +20,8 @@ function App() {
     <div className="App">
       <Routes>
         {/* --- Public & Main Routes --- */}
-        {/* homepage with clubs user is in */}
-        <Route path="/" element={<HomePage />} /> 
+        {/* UserDashboard with clubs user is in */}
+        <Route path="/dashboard" element={<UserDashboard />} /> 
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
         

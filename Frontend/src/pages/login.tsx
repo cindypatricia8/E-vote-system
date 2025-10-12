@@ -1,21 +1,27 @@
-import React, { useState,  } from 'react';
-import type {FormEvent} from 'react';
-import { useNavigate } from 'react-router-dom'; 
-import { loginUser, setAuthToken } from '../api/apiService';
-import './login.css'; 
+import React, { useState, useEffect } from 'react';
+import type { FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/authContext'; 
 
 type FieldErrors = { studentId?: string; password?: string; general?: string };
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
-  
+  const { login, user, isLoading } = useAuth(); 
+
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
-  const [remember, setRemember] = useState(false);
   
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [success, setSuccess] = useState<string | null>(null);
+
+  // if user is already logged in instantly sign in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard'); 
+    }
+  }, [user, navigate]);
 
   const validation = (): FieldErrors => {
     const e: FieldErrors = {};
@@ -35,14 +41,14 @@ const LoginPage: React.FC = () => {
     setErrors({});
 
     try {
-      const response  = await loginUser({ studentId: studentId.trim(), password }); // We are logging in the user here with user data
-      const token = response.data.token; // We grab the token from the response data (This is the keycard)
 
-      setAuthToken(token); // We set the keycard for the whole application so they can keep the user logged in
-      setSuccess(`Welcome back, ${response.data.data.user.name}! Redirecting...`); // Respond with name by grabbing the name from response data 
+      await login({ studentId: studentId.trim(), password });
+      
+      setSuccess(`Login successful! Redirecting...`);
+
 
       setTimeout(() => {
-        navigate('/'); 
+        navigate('/dashboard'); 
       }, 1000);
 
     } catch (err: any) {
@@ -52,6 +58,10 @@ const LoginPage: React.FC = () => {
       setSubmitting(false);
     }
   };
+
+  if (isLoading) {
+      return <div>Loading...</div>;
+  }
 
   return (
     <div className="page">
@@ -101,8 +111,7 @@ const LoginPage: React.FC = () => {
           <input 
             id="remember" 
             type="checkbox"
-            checked={remember} 
-            onChange={(e) => setRemember(e.target.checked)} 
+
           />
           <label htmlFor="remember">Remember me</label>
         </div>
