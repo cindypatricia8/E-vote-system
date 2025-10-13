@@ -77,7 +77,7 @@ export default function CreateClubPage() {
         <div className="create-club-page">
             <header className="page-header">
                 <h1>Create a New Club</h1>
-                <Link to="/" className="home-button">Home</Link>
+                <Link to="/dashboard" className="home-button">Home</Link>
             </header>
 
             <div className="container">

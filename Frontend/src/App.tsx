@@ -4,14 +4,14 @@ import { Routes, Route } from 'react-router-dom';
 
 import Login from './pages/login';
 import SignUp from './pages/signUp';
-//import ElectionDashboard from './pages/ElectionDashboard';
+import ClubDetailsPage from './pages/ClubDetailsPage';
 import votepagetest from './pages/voting';
 import VotingPage from './pages/VotingPage';
 import CreateClubPage from './pages/CreateClubPage';
-import AdminDashboard from './pages/admin/AdminDashboard';
-import CreateElectionPage from './pages/admin/CreateElectionPage';
-import ElectionLivePage from './pages/admin/ElectionLivePage';
-import AdminLayout from './pages/admin/AdminLayout';
+
+import ManageClubPage from './pages/ClubAdmin/ManageClubPage';
+import CreateElectionPage from './pages/ClubAdmin/CreateElectionPage';
+import ClubAdminLayout from './pages/ClubAdmin/ClubAdminLayout';
 import UserDashboard from './pages/UserDashboard';
 
 
@@ -25,18 +25,18 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
         
-        
-        <Route path="/voting" element={<VotingPage />} />
-        {/* <Route path="/election-dashboard" element={<ElectionDashboard />} /> */}
         <Route path="/create-club" element={<CreateClubPage />} />
+        
+        <Route path="/club/:clubId" element={<ClubDetailsPage />} />
 
-        <Route path="/admin" element={<AdminLayout />}>
-
-          <Route index element={<AdminDashboard />} />
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="create-election" element={<CreateElectionPage />} />
-          <Route path="election-live/:electionId" element={<ElectionLivePage />} />
+        <Route element={<ClubAdminLayout/>}>
+          <Route path="/club/:clubId/manage" element={<ManageClubPage/>} />
+          <Route path="/club/:clubId/create-election" element={<CreateElectionPage/>} />
         </Route>
+      
+        <Route path="/voting" element={<VotingPage />} />
+
+
         
       </Routes>
     </div>

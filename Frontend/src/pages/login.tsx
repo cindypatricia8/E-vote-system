@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext'; 
+import './login.css'
 
 type FieldErrors = { studentId?: string; password?: string; general?: string };
 
@@ -64,36 +65,36 @@ const LoginPage: React.FC = () => {
   }
 
   return (
-    <div className="page">
+    <div className="login-page-container">
       <div className="instruction-box">
         <div className="alert-logo" aria-hidden="true"></div>
         <span className="instruction-text">Sign in with your Account to Access Monash Portal Apps</span>
       </div>
 
-      <div className="monash-logo"></div>
-      <span className="SignIn">Sign In</span>
-    
-      <form className="userForm" onSubmit={onSubmit} noValidate>
+      <div className="login-form-wrapper">
+        <div className="monash-logo"></div>
         
-        <label htmlFor="studentId" className="EmailText">Student ID</label>
-        <div className="EmailBox">
-          <input
-            id="studentId" 
-            name="studentId" 
-            type="text" 
-            placeholder="Your Student ID"
-            value={studentId} 
-            onChange={(e) => setStudentId(e.target.value)}
-            className={`input ${errors.studentId ? 'input--error' : ''}`}
-          />
-           {errors.studentId && (
-            <p id="studentId-error" className="error-email">{errors.studentId}</p>
-           )}
+        <div className="login-header">
+          <span className="SignIn">Sign In</span>
         </div>
-        
-        <label htmlFor="password" className="PasswordText">Password</label>
-        <div className="PasswordBox">
-          <div className="password-wrap">
+    
+        <form className="userForm" onSubmit={onSubmit} noValidate>
+          <div className="form-group">
+            <label htmlFor="studentId" className="form-label">Student ID</label>
+            <input
+              id="studentId" 
+              name="studentId" 
+              type="text" 
+              placeholder="Your Student ID"
+              value={studentId} 
+              onChange={(e) => setStudentId(e.target.value)}
+              className="input"
+            />
+            {errors.studentId && <p className="error-email">{errors.studentId}</p>}
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">Password</label>
             <input
               id="password" 
               name="password" 
@@ -101,42 +102,30 @@ const LoginPage: React.FC = () => {
               placeholder="Your password"
               value={password} 
               onChange={(e) => setPassword(e.target.value)}
-              className={`input ${errors.password ? 'input--error' : ''}`}
+              className="input"
             />
+            {errors.password && <p className="error-pass">{errors.password}</p>}
           </div>
-          {errors.password && <div className="error-pass">{errors.password}</div>}
-        </div>
 
-        <div className="remember-row">
-          <input 
-            id="remember" 
-            type="checkbox"
+          <div className="remember-row">
+            <input id="remember" type="checkbox" />
+            <label htmlFor="remember">Remember me</label>
+          </div>
+          
+          <button type="submit" className="primary-btn" disabled={submitting}>
+            {submitting ? 'Signing in...' : 'Sign in'}
+          </button>
 
-          />
-          <label htmlFor="remember">Remember me</label>
-        </div>
+          {errors.general && <div className="error-alert">{errors.general}</div>}
+          {success && <div className="success-alert">{success}</div>}
+        </form>
         
-        <button type="submit" className="primary-btn" disabled={submitting}>
-          {submitting ? 'Signing in...' : 'Sign in'}
-        </button>
-
-        {errors.general && (
-          <div className="error-alert" role="alert" aria-live="assertive">
-            {errors.general}
-          </div>
-        )}
-        {success && (
-          <div className="success-alert" role="alert" aria-live="assertive">
-            {success}
-          </div>
-        )}
-      </form>
-      
-      <div className="toggle-container">
-        <span className="no-account">Don’t have an account? </span>
-        <button type="button" onClick={() => navigate('/register')} className="sign-up">
-          Sign Up
-        </button>
+        <div className="toggle-container">
+          <span className="no-account">Don’t have an account?</span>
+          <button type="button" onClick={() => navigate('/register')} className="sign-up">
+            Sign Up
+          </button>
+        </div>
       </div>
     </div>
   );

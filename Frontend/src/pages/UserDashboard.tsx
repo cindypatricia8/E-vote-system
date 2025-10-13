@@ -5,7 +5,7 @@ import { getAllClubs } from '../api/apiService';
 import type { Club } from '../types';
 import './UserDashboard.css'; 
 
-// A simple helper component for the club buttons
+
 interface ClubButtonProps {
   club: Club;
   onOpen: (club: Club) => void;
@@ -58,14 +58,13 @@ export default function UserDashboard() {
     };
     
     fetchMemberClubs();
-  }, [user]); // Re-run this effect if the user object changes
+  }, [user]); 
 
   const handleOpenClub = (club: Club) => {
-    alert(`Navigating to details for: ${club.name}`);
-    // navigate(`/club/${club._id}`);
+    navigate(`/club/${club._id}`);
   };
   
-  // Render system admin button conditionally
+  // Show system admin button conditionally
   const isAdmin = user?.roles.includes('systemAdmin');
 
   return (
@@ -74,9 +73,9 @@ export default function UserDashboard() {
         <h1>My Clubs</h1>
         <div className="spacer" />
         
-        {/* Only show the Admin Panel button if the user has the 'systemAdmin' role */}
+        {/* Only show the Admin Panel button if the user is a system admin*/}
         {isAdmin && (
-          <button type="button" onClick={() => navigate('/admin/dashboard')} className="admin-button">
+          <button type="button" onClick={() => navigate('/create-club')} className="admin-button">
             Admin Panel
           </button>
         )}

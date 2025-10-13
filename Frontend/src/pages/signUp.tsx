@@ -3,7 +3,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/authContext'; 
 import type { UserRegistrationPayload } from '../types';
-import './SignUp.css';
+import './signUp.css';
 
 
 type FormErrors = Partial<Record<keyof UserRegistrationPayload | 'general' | 'surname' | 'confirmpassword', string>>;

@@ -1,0 +1,276 @@
+/* --- Color & Style Variables --- */
+:root {
+    --bg-page: #f4f6f9;
+    --bg-card: #ffffff;
+    --bg-section: #f9fafb;
+    --border-color-light: #ecf0f1;
+    --border-color-medium: #d1d5db;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-placeholder: #9ca3af;
+    --accent-indigo: #4f46e5;
+    --accent-indigo-hover: #4338ca;
+    --accent-green: #27ae60;
+    --accent-red: #e74c3c;
+}
+
+/* --- Main Layout --- */
+/* (Assuming a parent sets the main page background) */
+
+.create-election-container {
+    background-color: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+/* --- Headers --- */
+.create-election-container h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--accent-indigo);
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.create-election-container h2.club-name-header {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-section h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+/* --- Form Structure & Elements --- */
+.form-section {
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    background-color: var(--bg-section);
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.form-input {
+    width: 100%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color-medium);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input::placeholder {
+    color: var(--text-placeholder);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-indigo);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+textarea.form-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.flex-container {
+    display: flex;
+    gap: 1.5rem;
+}
+.flex-item {
+    flex: 1;
+}
+
+/* --- Dynamic Position & Candidate Sections --- */
+.position-block {
+    padding: 1.5rem;
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    margin-bottom: 1rem;
+}
+
+.candidate-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+@media (min-width: 640px) {
+    .candidate-row {
+        flex-direction: row;
+        gap: 1rem;
+    }
+}
+.candidate-row .input-wrapper {
+    flex: 1;
+    width: 100%;
+}
+
+.add-button {
+    background: none;
+    border: none;
+    color: var(--accent-indigo);
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.5rem 0;
+}
+.add-button:hover {
+    text-decoration: underline;
+}
+
+.add-position-button {
+    width: 100%;
+    padding: 1rem;
+    border: 2px dashed var(--border-color-medium);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.add-position-button:hover {
+    background-color: var(--bg-section);
+    color: var(--text-primary);
+}
+
+/* Reusing admin-pill style from other pages */
+.admin-pill {
+    display: flex;
+    align-items: center;
+    background-color: #e0e7ff;
+    color: #4338ca;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+.admin-pill button {
+    background: none;
+    border: none;
+    color: #4338ca;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* --- Submit Button & Feedback --- */
+.error-message {
+    color: var(--accent-red);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.submit-button-container {
+    text-align: center;
+    padding-top: 1rem;
+}
+.submit-button {
+    background-color: var(--accent-indigo);
+    color: white;
+    font-weight: bold;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    transition: background-color 0.2s, transform 0.1s;
+}
+.submit-button:hover:not(:disabled) {
+    background-color: var(--accent-indigo-hover);
+    transform: translateY(-2px);
+}
+.submit-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* --- Success View --- */
+.success-view {
+    text-align: center;
+    padding: 3rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.success-view h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent-green);
+}
+
+.success-view p {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+}
+
+.success-view .election-id-display {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    background-color: var(--bg-section);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+    border: 1px solid var(--border-color-light);
+}
+
+.success-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.success-actions .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.success-actions .btn-primary {
+    background-color: #2980b9;
+    color: white;
+}
+.success-actions .btn-primary:hover {
+    background-color: #2471a3;
+}
+
+.success-actions .btn-secondary {
+    background-color: var(--bg-section);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color-medium);
+}
+.success-actions .btn-secondary:hover {
+    background-color: var(--border-color-light);
+}

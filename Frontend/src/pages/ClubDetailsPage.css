@@ -1,0 +1,136 @@
+.club-details-page {
+  background-color: #f4f7f6;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.topbar-left button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.topbar-center {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Container for main content */
+.club-details-container {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.club-details-container header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.club-details-container header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+.club-details-container header p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+}
+
+.manage-club-btn {
+  background-color: #e67e22;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.manage-club-btn:hover {
+  background-color: #d35400;
+}
+
+
+/* Section styling */
+.section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+.section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+  padding-bottom: 0.5rem;
+}
+.section h2 i {
+  margin-right: 0.75rem;
+}
+
+.election-item {
+  border: 1px solid #ecf0f1;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.election-item:last-child {
+  margin-bottom: 0;
+}
+.election-item.current { border-left: 5px solid #27ae60; }
+.election-item.finished { border-left: 5px solid #95a5a6; }
+.election-item.upcoming { border-left: 5px solid #3498db; }
+
+.election-item h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+.election-date {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 0.25rem;
+}
+
+.action-buttons .btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.action-buttons .btn-view {
+  background-color: #3498db;
+  color: white;
+}
+.action-buttons .btn-view:hover {
+  background-color: #2980b9;
+}
+
+.no-elections-message {
+    color: #7f8c8d;
+    text-align: center;
+    padding: 1rem;
+}

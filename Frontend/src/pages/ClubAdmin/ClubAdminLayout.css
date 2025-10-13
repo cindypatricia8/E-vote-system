@@ -1,0 +1,75 @@
+/* General Layout */
+.club-admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f9;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar Styling */
+.club-admin-sidebar {
+  width: 240px; 
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column; 
+}
+.club-admin-sidebar h2 {
+  margin: 0;
+  font-size: 16px;
+  color: #95a5a6;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.club-admin-sidebar .club-name-header { 
+  font-size: 22px;
+  margin: 5px 0 20px 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #34495e;
+  word-wrap: break-word;
+}
+.club-admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.club-admin-sidebar ul li {
+  margin: 18px 0;
+}
+.club-admin-sidebar ul li a {
+  color: #bdc3c7;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.2s;
+  display: block;
+  padding: 5px 0;
+}
+.club-admin-sidebar ul li a:hover,
+.club-admin-sidebar ul li a.active { 
+  color: white;
+  font-weight: bold;
+}
+
+.sidebar-footer { 
+    margin-top: auto; 
+    padding-top: 20px;
+    border-top: 1px solid #34495e;
+}
+.sidebar-footer a {
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 14px;
+}
+.sidebar-footer a:hover {
+    color: white;
+}
+
+
+/* Main Content Area */
+.club-admin-main-content {
+  flex-grow: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
