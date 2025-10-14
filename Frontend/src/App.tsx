@@ -8,6 +8,7 @@ import ClubDetailsPage from './pages/ClubDetailsPage';
 import votepagetest from './pages/voting';
 import VotingPage from './pages/VotingPage';
 import CreateClubPage from './pages/CreateClubPage';
+import ElectionDetailsPage from './pages/ElectionDetailsPage';
 
 import ManageClubPage from './pages/ClubAdmin/ManageClubPage';
 import CreateElectionPage from './pages/ClubAdmin/CreateElectionPage';
@@ -39,7 +40,9 @@ function App() {
             <Route path="/club/:clubId/manage" element={<ManageClubPage/>} />
             <Route path="/club/:clubId/create-election" element={<CreateElectionPage/>} />
           </Route>
-        
+
+          <Route path="/election/:electionId" element={<ElectionDetailsPage />} />
+
           <Route path="/voting" element={<VotingPage />} />
         </Route>
 

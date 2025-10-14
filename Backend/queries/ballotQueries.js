@@ -44,12 +44,11 @@ const getElectionResults = async (electionId) => {
     try {
         const objectId = new mongoose.Types.ObjectId(electionId);
 
-        // Run two queries in parallel for efficiency
         const [results, totalBallots] = await Promise.all([
-            // Query 1: The aggregation pipeline to tally votes
             Ballot.aggregate([
                 { $match: { electionId: objectId } },
                 { $unwind: '$selections' },
+                { $match: { 'selections.candidateId': { $exists: true, $ne: null } } },
                 {
                     $group: {
                         _id: {
@@ -63,13 +62,12 @@ const getElectionResults = async (electionId) => {
                     $project: {
                         _id: 0,
                         positionId: '$_id.positionId',
-                        candidateId: '$_id.candidateId',
+                        candidateId: '$_id.candidateId', 
                         voteCount: '$voteCount'
                     }
                 },
                 { $sort: { positionId: 1, voteCount: -1 } }
             ]),
-            // Query 2: A simple count of all ballots for this election
             Ballot.countDocuments({ electionId: objectId })
         ]);
 

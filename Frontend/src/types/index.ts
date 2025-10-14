@@ -100,16 +100,27 @@ export interface ElectionResultPosition {
   candidates: ElectionResultCandidate[];
 }
 
+// Represents a single candidate within the results payload
+export interface ResultCandidate {
+  candidateId: string;
+  name: string;
+  voteCount: number;
+}
+
+// Represents a single position within the results payload
+export interface ResultPosition {
+  positionId: string;
+  positionTitle: string;
+  candidates: ResultCandidate[];
+}
+
 export interface ElectionResultsResponse {
   status: string;
   data: {
-    electionTitle: string;
-    clubName: string;
+    results: ResultPosition[];
     totalBallotsCast: number;
-    results: ElectionResultPosition[];
   };
 }
-
 export interface CreateCandidatePayload {
     candidateId: string;
     statement: string;

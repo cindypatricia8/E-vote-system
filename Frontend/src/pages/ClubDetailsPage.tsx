@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate ,Link } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 import { getClubById, getElectionsByClub } from '../api/apiService';
 import type { Club, Election } from '../types';
@@ -15,7 +15,7 @@ const ElectionItem: React.FC<{ election: Election }> = ({ election }) => {
       </p>
       <p>{election.description}</p>
       <div className="action-buttons">
-        <button className="btn btn-view">View Details</button>
+        <Link to={`/election/${election._id}`}>View Details</Link>
       </div>
     </div>
   );
