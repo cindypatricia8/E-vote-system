@@ -2,9 +2,8 @@
 .club-admin-layout {
   display: flex;
   min-height: 100vh;
-  background-color: #f4f6f9;
-  font-family: Arial, sans-serif;
 }
+
 
 /* Sidebar Styling */
 .club-admin-sidebar {
@@ -67,9 +66,117 @@
 }
 
 
-/* Main Content Area */
 .club-admin-main-content {
-  flex-grow: 1;
+  flex-grow: 1; 
   padding: 30px;
   overflow-y: auto;
+  display: flex; 
+  flex-direction: column; 
+}
+
+/* --- Styles from ManageClubPage.css are now here --- */
+
+.club-admin-main-content h1 {
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.admin-button-panel {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.admin-button-panel button, .admin-button-panel a {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.admin-button-panel .new-election { background: #e74c3c; }
+.admin-button-panel .new-election:hover { background: #c0392b; }
+.admin-button-panel .view-public { background: #3498db; }
+.admin-button-panel .view-public:hover { background: #2980b9; }
+
+
+.admin-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.admin-card {
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+  color: white;
+}
+.admin-card h3 { margin: 10px 0; font-size: 20px; font-weight: normal; }
+.admin-card p { font-size: 28px; font-weight: bold; }
+
+
+.manage-club-layout {
+  display: grid;
+  grid-template-columns: 1fr; 
+  gap: 30px;
+  width: 100%; 
+}
+
+@media (min-width: 1024px) {
+  .manage-club-layout {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+
+.manage-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.manage-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+  padding-bottom: 0.5rem;
+}
+
+
+.manage-section {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.manage-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ecf0f1;
+  padding-bottom: 0.5rem;
+  flex-shrink: 0; 
+}
+.add-member-section {
+  margin-bottom: 1.5rem;
+  flex-shrink: 0; 
+}
+
+
+.member-list {
+  list-style: none;
+  padding: 0;
+  max-height: 400px; 
+  overflow-y: auto;  
+  border-top: 1px solid #ecf0f1;
+  padding-top: 0.5rem;
 }

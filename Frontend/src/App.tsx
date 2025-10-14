@@ -45,7 +45,7 @@ function App() {
 
           <Route path="/voting" element={<VotingPage />} />
         </Route>
-
+    
         
       </Routes>
     </div>
