@@ -44,9 +44,7 @@ export default function ElectionDetailsPage()
                 const electionRes = await getElectionById(electionId);
                 const fetchedElection = electionRes.data.data.election;
                 setElection(fetchedElection);
-
                 const isElectionClosed = fetchedElection.status === 'closed' || new Date() > new Date(fetchedElection.endTime);
-
                 if (isElectionClosed)
                 {
                     const resultsRes = await getElectionResults(electionId);
@@ -57,14 +55,8 @@ export default function ElectionDetailsPage()
                         const candidatesWithPercentage = position.candidates.map(candidate => ({
                             ...candidate,
                             percentage: totalBallotsCast > 0 ? (candidate.voteCount / totalBallotsCast) * 100 : 0,
-
                         }));
-
-
-
                         candidatesWithPercentage.sort((a, b) => b.voteCount - a.voteCount);
-
-
                         return {
                             ...position,
                             candidates: candidatesWithPercentage,
@@ -90,6 +82,8 @@ export default function ElectionDetailsPage()
     const isClosed =
         election?.status === "closed" ||
         (election && new Date() > new Date(election.endTime));
+
+    const isActive = election?.status === 'active' && !isClosed;    
 
     const displayablePositions = useMemo((): DisplayPosition[] =>
     {
@@ -126,6 +120,11 @@ export default function ElectionDetailsPage()
                 <div className={`election-status-banner status-${isClosed ? 'closed' : election.status}`}>
                     {isClosed ? 'Election Closed' : `Status: ${election.status}`}
                 </div>
+                {isActive && (
+                    <Link to={`/election/${electionId}/vote`} className="vote-now-button">
+                        <i className="fas fa-vote-yea"></i> Cast Your Vote Now
+                    </Link>
+                )}
             </header>
 
             <div className="positions-list">

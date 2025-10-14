@@ -3,7 +3,7 @@ import { NavLink, Outlet, useParams, Link } from 'react-router-dom';
 import { getClubById } from '../../api/apiService';
 import './ClubAdminLayout.css'; 
 
-export default function ClubAdminLayout() {
+const ClubAdminLayout: React.FC = () => {
   
   const { clubId } = useParams<{ clubId: string }>();
   const [clubName, setClubName] = useState('Loading...');
@@ -48,3 +48,5 @@ export default function ClubAdminLayout() {
     </div>
   );
 }
+
+export default ClubAdminLayout;

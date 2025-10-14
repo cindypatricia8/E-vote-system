@@ -123,5 +123,24 @@
   transition: width 0.5s ease-out;
 }
 .result-item.winner .rank {
-  color: #f59e0b; /* Gold for winner */
+  color: #f59e0b; 
+}
+
+.vote-now-button {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.8rem 2rem;
+  background-color: #27ae60; 
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.vote-now-button:hover {
+  background-color: #229954;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

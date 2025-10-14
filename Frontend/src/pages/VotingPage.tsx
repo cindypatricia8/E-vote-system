@@ -1,143 +1,133 @@
-import { useMemo, useState } from "react";
-import { ImageSlider, type Candidate, type Position } from "../components/ImageSlider";
-//import "./main-voting.css";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getElectionById, castVote } from '../api/apiService';
+import type { Election } from '../types';
+import './VotingPage.css';
 
-import presidentA from "../images/presidentA.jpg";
-import presidentB from "../images/presidentB.jpg";
-import presidentC from "../images/presidentC.jpg";
-import presidentD from "../images/presidentD.jpg";
+// Type for the state that tracks user's selections
+type SelectionsState = Record<string, string>; // { [positionId]: candidateId }
 
-// Demo data
-const candidates: Candidate[] = [
-  { id: "1", first_name: "Emma",  last_name: "Johnson", position: "President",      img: presidentA, vision: "Build an inclusive and creative club culture.", mission: "Launch mentorship programs and feedback surveys." },
-  { id: "2", first_name: "David", last_name: "Larson",  position: "Vice President", img: presidentB, vision: "Build an inclusive and creative club culture.", mission: "Launch mentorship programs and feedback surveys." },
-  { id: "3", first_name: "Erika", last_name: "Morrow",  position: "Secretary",      img: presidentC, vision: "Build an inclusive and creative club culture.", mission: "Launch mentorship programs and feedback surveys." },
-  { id: "4", first_name: "Carley",last_name: "Fortune", position: "Treasurer",      img: presidentD, vision: "Build an inclusive and creative club culture.", mission: "Launch mentorship programs and feedback surveys." },
-  { id: "5", first_name: "Sally", last_name: "Rooney",  position: "Treasurer",      img: presidentD, vision: "Build an inclusive and creative club culture.", mission: "Launch mentorship programs and feedback surveys." },
-];
+const VotingPage: React.FC = () => {
+  const { electionId } = useParams<{ electionId: string }>();
+  const navigate = useNavigate();
 
-const POSITIONS: Position[] = ["President", "Vice President", "Secretary", "Treasurer"];
+  const [election, setElection] = useState<Election | null>(null);
+  const [selections, setSelections] = useState<SelectionsState>({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-function TabBar({ value, onChange }: { value: Position; onChange: (p: Position) => void }) {
-  return (
-    <div role="tablist" aria-label="Positions" className="tabbar">
-      {POSITIONS.map((p) => (
-        <button
-          key={p}
-          role="tab"
-          className="tab"
-          aria-selected={value === p}
-          onClick={() => onChange(p)}
-        >
-          {p}
-        </button>
-      ))}
-    </div>
-  );
-}
+  useEffect(() => {
+    if (!electionId) return;
 
-export default function MainVoting() {
-  const [tab, setTab] = useState<Position>("President");
+    const fetchElection = async () => {
+      try {
+        const response = await getElectionById(electionId);
+        const fetchedElection = response.data.data.election;
+        
+        // Security check: If the election isn't active, redirect away
+        const isClosed = fetchedElection.status === 'closed' || new Date() > new Date(fetchedElection.endTime);
+        if (isClosed || fetchedElection.status !== 'active') {
+          alert("This election is not currently active for voting.");
+          navigate(`/election/${electionId}`);
+          return;
+        }
+        
+        setElection(fetchedElection);
+      } catch (err) {
+        setError('Failed to load the election ballot.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchElection();
+  }, [electionId, navigate]);
 
-  // remember a selection per role
-  const [selectedByRole, setSelectedByRole] = useState<Record<Position, string | null>>({
-    President: null, "Vice President": null, Secretary: null, Treasurer: null,
-  });
+  const handleSelectionChange = (positionId: string, candidateId: string) => {
+    setSelections(prev => ({
+      ...prev,
+      [positionId]: candidateId,
+    }));
+  };
 
-  // list for active tab (used by radios + slider)
-  const visible = useMemo(() => candidates.filter((c) => c.position === tab), [tab]);
-  const selectedId = selectedByRole[tab];
-  const currentPick = useMemo(
-    () => visible.find((c) => c.id === selectedId) ?? null,
-    [visible, selectedId]
-  );
-
-  // Completion logic
-  const countsByRole: Record<Position, number> = useMemo(() => {
-    return POSITIONS.reduce((acc, p) => {
-      acc[p] = candidates.filter(c => c.position === p).length;
-      return acc;
-    }, {} as Record<Position, number>);
-  }, []);
-
-  const requiredRoles = useMemo(
-    () => POSITIONS.filter(p => countsByRole[p] > 0),
-    [countsByRole]
-  );
-  const allPicked = requiredRoles.every(p => !!selectedByRole[p]);
-  const missingRoles = requiredRoles.filter(p => !selectedByRole[p]);
-
-  function onSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!allPicked) {
-      alert(`Please choose a candidate for: ${missingRoles.join(", ")}`);
+    
+    if (Object.keys(selections).length !== election?.positions.length) {
+      setError('Please make a selection for every position.');
       return;
     }
-    const payload = requiredRoles.map(p => ({
-      position: p,
-      candidateId: selectedByRole[p]!,
-    }));
-    // send to backend
-    alert("Submitting\n" + JSON.stringify(payload, null, 2));
-  }
 
-  const FORM_ID = "vote-form";
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      // Transform the state object into the array format the API expects
+      const payload = Object.entries(selections).map(([positionId, candidateId]) => ({
+        positionId,
+        candidateId,
+      }));
+      
+      await castVote(electionId!, payload);
+
+      // On success, show an alert and redirect
+      alert('Your vote has been cast successfully!');
+      navigate(`/club/${election?.clubId._id}`);
+
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'A critical error occurred. Your vote was not cast.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) return <div>Loading ballot...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+  if (!election) return <div>Election not found.</div>;
 
   return (
-    <div className="page">
-      <h1>Club Election — Candidates</h1>
-      <h3>Please Enter your selection for the Positions Below</h3>
-      <p className="subtle">
-        *Press a position tab to display its candidates (with vision & mission)
-      </p>
+    <div className="voting-page-container">
+      <div className="voting-header">
+        <h1>{election.title}</h1>
+        <p>Select one candidate for each position below and submit your vote.</p>
+      </div>
 
-      {/* Tab-specific form (no submit button inside) */}
-      <form id={FORM_ID} onSubmit={onSubmit} className="vote-form">
-        <fieldset className="vote-fieldset">
-          <legend className="vote-legend">{tab}</legend>
+      <form onSubmit={handleSubmit} className="ballot-form">
+        {election.positions.map(position => (
+          <div key={position._id} className="position-voting-card">
+            <h2>{position.title}</h2>
+            
+            {position.candidates.map(candidate => (
+              <label 
+                key={candidate.candidateId._id} 
+                className={`candidate-option ${selections[position._id] === candidate.candidateId._id ? 'selected' : ''}`}
+              >
+                <input
+                  type="radio"
+                  name={position._id}
+                  value={candidate.candidateId._id}
+                  checked={selections[position._id] === candidate.candidateId._id}
+                  onChange={() => handleSelectionChange(position._id, candidate.candidateId._id)}
+                />
+                <div>
+                  <div className="name">{candidate.candidateId.name}</div>
+                  <div className="statement">"{candidate.statement || 'No statement provided.'}"</div>
+                </div>
+              </label>
+            ))}
+          </div>
+        ))}
 
-          {visible.length === 0 ? (
-            <p style={{ color: "#888" }}>No candidates for {tab}.</p>
-          ) : (
-            visible.map((c) => {
-              const id = `${tab}-${c.id}`;
-              return (
-                <label key={c.id} htmlFor={id} className="radio-option">
-                  <input
-                    id={id}
-                    type="radio"
-                    name={`candidate-${tab}`}
-                    value={c.id}
-                    checked={selectedId === c.id}
-                    onChange={() => setSelectedByRole((prev) => ({ ...prev, [tab]: c.id }))}
-                  />
-                  <span>{c.first_name} {c.last_name}</span>
-                </label>
-              );
-            })
-          )}
-        </fieldset>
+        {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+        
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <button type="submit" className="submit-vote-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit Final Vote'}
+          </button>
+        </div>
       </form>
-
-      {/* Submit button lives outside the form */}
-      <button
-        type="submit"
-        form={FORM_ID}
-        disabled={!allPicked}
-        className="submit-btn"
-      >
-        Submit
-      </button>
-
-      {/* Tabs (page-wide) */}
-      <TabBar value={tab} onChange={setTab} />
-
-      {/* Slider */}
-      {visible.length ? (
-        <ImageSlider imageUrls={visible} />
-      ) : (
-        <p style={{ textAlign: "center", color: "#888" }}>No candidates for {tab}.</p>
-      )}
     </div>
   );
 }
+
+export default VotingPage;

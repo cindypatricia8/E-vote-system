@@ -1,12 +1,18 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../../context/authContext';
-import { getClubById, getElectionsByClub, addMemberToClub, removeMemberFromClub } from '../../api/apiService';
-import type { Club, Election, User } from '../../types';
-import UserSearchInput from '../../components/UserSearchInput';
-import './ClubAdminLayout.css';
+import React, { useState, useEffect, useMemo } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../context/authContext";
+import
+  {
+    getClubById,
+    getElectionsByClub,
+    addMemberToClub,
+    removeMemberFromClub,
+  } from "../../api/apiService";
+import type { Club, Election, User } from "../../types";
+import UserSearchInput from "../../components/UserSearchInput";
+import "./ClubAdminLayout.css";
 
-export default function ManageClubPage()
+const ManageClubPage: React.FC = () =>
 {
   const { clubId } = useParams<{ clubId: string }>();
   const navigate = useNavigate();
@@ -21,7 +27,7 @@ export default function ManageClubPage()
   {
     if (!clubId)
     {
-      setError('No club specified.');
+      setError("No club specified.");
       setIsLoading(false);
       return;
     }
@@ -35,7 +41,7 @@ export default function ManageClubPage()
       setElections(electionsRes.data.data.elections);
     } catch (err)
     {
-      setError('Failed to load club data.');
+      setError("Failed to load club data.");
     } finally
     {
       setIsLoading(false);
@@ -53,14 +59,20 @@ export default function ManageClubPage()
     return {
       memberCount: club?.members?.length || 0,
       adminCount: club?.admins?.length || 0,
-      activeElections: elections.filter(e => new Date(e.startTime) <= now && new Date(e.endTime) >= now).length,
+      activeElections: elections.filter(
+        (e) => new Date(e.startTime) <= now && new Date(e.endTime) >= now
+      ).length,
     };
   }, [club, elections]);
 
   const isAuthorized = useMemo(() =>
   {
     if (!currentUser || !club) return false;
-    return club.admins.some(admin => (typeof admin === 'string' ? admin === currentUser._id : admin._id === currentUser._id));
+    return club.admins.some((admin) =>
+      typeof admin === "string"
+        ? admin === currentUser._id
+        : admin._id === currentUser._id
+    );
   }, [currentUser, club]);
 
   const handleAddMember = async (userToAdd: User) =>
@@ -72,27 +84,34 @@ export default function ManageClubPage()
       fetchData(); // Refetch data to update the member list
     } catch (error)
     {
-      alert('Failed to add member.');
+      alert("Failed to add member.");
     }
   };
 
   const handleRemoveMember = async (memberId: string) =>
   {
-    if (!clubId || !window.confirm('Are you sure you want to remove this member?')) return;
+    if (
+      !clubId ||
+      !window.confirm("Are you sure you want to remove this member?")
+    )
+      return;
     try
     {
       await removeMemberFromClub(clubId, memberId);
       fetchData(); // Refetch data to update the member list
     } catch (error)
     {
-      alert('Failed to remove member.');
+      alert("Failed to remove member.");
     }
   };
 
   // Create a list of IDs to exclude from the search (current members + current user)
   const excludeFromSearchIds = useMemo(() =>
   {
-    const memberIds = club?.members.map(member => (typeof member === 'string' ? member : member._id)) || [];
+    const memberIds =
+      club?.members.map((member) =>
+        typeof member === "string" ? member : member._id
+      ) || [];
     if (currentUser)
     {
       return [...memberIds, currentUser._id];
@@ -102,26 +121,29 @@ export default function ManageClubPage()
 
   if (isLoading)
   {
-    return <div style={{ padding: '2rem' }}>Loading management panel...</div>;
+    return <div style={{ padding: "2rem" }}>Loading management panel...</div>;
   }
 
   if (error)
   {
-    return <div style={{ padding: '2rem', color: 'red' }}>Error: {error}</div>;
+    return <div style={{ padding: "2rem", color: "red" }}>Error: {error}</div>;
   }
 
   if (!club)
   {
-    return <div style={{ padding: '2rem' }}>Club not found.</div>;
+    return <div style={{ padding: "2rem" }}>Club not found.</div>;
   }
 
   if (!isAuthorized)
   {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <div style={{ padding: "2rem", textAlign: "center" }}>
         <h1>Access Denied</h1>
         <p>You are not an administrator for this club.</p>
-        <Link to={`/club/${clubId}`} style={{ color: '#3498db', textDecoration: 'underline' }}>
+        <Link
+          to={`/club/${clubId}`}
+          style={{ color: "#3498db", textDecoration: "underline" }}
+        >
           Back to Public Page
         </Link>
       </div>
@@ -132,7 +154,10 @@ export default function ManageClubPage()
     <div className="manage-club-page">
       <h1>Manage: {club.name}</h1>
       <div className="admin-button-panel">
-        <button className="new-election" onClick={() => navigate(`/club/${clubId}/create-election`)}>
+        <button
+          className="new-election"
+          onClick={() => navigate(`/club/${clubId}/create-election`)}
+        >
           + Create New Election
         </button>
         <Link to={`/club/${clubId}`} className="view-public">
@@ -141,15 +166,15 @@ export default function ManageClubPage()
       </div>
 
       <div className="admin-cards">
-        <div className="admin-card" style={{ background: '#2980b9' }}>
+        <div className="admin-card" style={{ background: "#2980b9" }}>
           <h3>Total Members</h3>
           <p>{stats.memberCount}</p>
         </div>
-        <div className="admin-card" style={{ background: '#27ae60' }}>
+        <div className="admin-card" style={{ background: "#27ae60" }}>
           <h3>Admins</h3>
           <p>{stats.adminCount}</p>
         </div>
-        <div className="admin-card" style={{ background: '#e67e22' }}>
+        <div className="admin-card" style={{ background: "#e67e22" }}>
           <h3>Active Elections</h3>
           <p>{stats.activeElections}</p>
         </div>
@@ -159,15 +184,20 @@ export default function ManageClubPage()
         <div className="manage-section">
           <h2>Manage Members</h2>
           <div className="add-member-section">
-            <label className="block text-gray-700 font-medium mb-2">Add New Member</label>
-            <UserSearchInput onUserSelect={handleAddMember} excludeIds={excludeFromSearchIds} />
+            <label className="block text-gray-700 font-medium mb-2">
+              Add New Member
+            </label>
+            <UserSearchInput
+              onUserSelect={handleAddMember}
+              excludeIds={excludeFromSearchIds}
+            />
           </div>
           <ul className="member-list">
             {club.members.length > 0 ? (
-              club.members.map(member =>
+              club.members.map((member) =>
               {
-
-                const memberDetails = typeof member === 'object' ? member : null;
+                const memberDetails =
+                  typeof member === "object" ? member : null;
                 if (!memberDetails) return null;
 
                 //const isLastAdmin = club.admins.length === 1 && club.admins[0]. === memberDetails._id;
@@ -178,14 +208,25 @@ export default function ManageClubPage()
                       <div className="name">{memberDetails.name}</div>
                       <div className="id">ID: {memberDetails.studentId}</div>
                     </div>
-                    <button className="remove-member-btn" onClick={() => handleRemoveMember(memberDetails._id)}>
+                    <button
+                      className="remove-member-btn"
+                      onClick={() => handleRemoveMember(memberDetails._id)}
+                    >
                       Remove
                     </button>
                   </li>
                 );
               })
             ) : (
-              <p style={{ textAlign: 'center', color: '#7f8c8d', padding: '1rem' }}>No members in this club yet.</p>
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "#7f8c8d",
+                  padding: "1rem",
+                }}
+              >
+                No members in this club yet.
+              </p>
             )}
           </ul>
         </div>
@@ -194,17 +235,30 @@ export default function ManageClubPage()
           <h2>Elections</h2>
           <ul className="member-list">
             {elections.length > 0 ? (
-              elections.map(election => (
+              elections.map((election) => (
                 <li key={election._id} className="election-list-item">
                   <div className="member-info">
                     <div className="name">{election.title}</div>
-                    <div className="id">Starts: {new Date(election.startTime).toLocaleDateString()}</div>
+                    <div className="id">
+                      Starts:{" "}
+                      {new Date(election.startTime).toLocaleDateString()}
+                    </div>
                   </div>
-                  <span className={`status status-${election.status}`}>{election.status}</span>
+                  <span className={`status status-${election.status}`}>
+                    {election.status}
+                  </span>
                 </li>
               ))
             ) : (
-              <p style={{ textAlign: 'center', color: '#7f8c8d', padding: '1rem' }}>No elections found for this club.</p>
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "#7f8c8d",
+                  padding: "1rem",
+                }}
+              >
+                No elections found for this club.
+              </p>
             )}
           </ul>
         </div>
@@ -212,3 +266,5 @@ export default function ManageClubPage()
     </div>
   );
 }
+
+export default ManageClubPage;

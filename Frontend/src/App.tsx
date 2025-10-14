@@ -42,10 +42,9 @@ function App() {
           </Route>
 
           <Route path="/election/:electionId" element={<ElectionDetailsPage />} />
-
-          <Route path="/voting" element={<VotingPage />} />
+          <Route path="/election/:electionId/vote" element={<VotingPage />} />
         </Route>
-    
+
         
       </Routes>
     </div>
