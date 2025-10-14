@@ -15,7 +15,7 @@ interface FormData {
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
 
-export default function CreateClubPage() {
+const CreateClubPage: React.FC = () => {
     const navigate = useNavigate();
     const { user: currentUser } = useAuth(); 
     
@@ -143,4 +143,5 @@ export default function CreateClubPage() {
             </div>
         </div>
     );
-}
+};
+export default CreateClubPage;

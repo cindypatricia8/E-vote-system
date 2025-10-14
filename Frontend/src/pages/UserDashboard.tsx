@@ -12,7 +12,7 @@ interface ClubButtonProps {
 }
 
 function ClubButton({ club, onOpen }: ClubButtonProps) {
-  const emoji = club.name.charAt(0).toUpperCase() || '🏛️';
+  //const emoji = club.name.charAt(0).toUpperCase() || '🏛️';
 
   return (
     <button type="button" className="club-button" onClick={() => onOpen(club)}>
@@ -26,7 +26,7 @@ function ClubButton({ club, onOpen }: ClubButtonProps) {
 }
 
 
-export default function UserDashboard() {
+const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth(); 
   
@@ -109,4 +109,6 @@ export default function UserDashboard() {
       </main>
     </div>
   );
-}
+};
+
+export default UserDashboard;

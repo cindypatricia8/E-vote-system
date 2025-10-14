@@ -13,18 +13,20 @@ const createClub = async (req, res) => {
             return res.status(400).json({ message: 'Club name is required.' });
         }
 
-        // The user creating the club becomes the first admin.
         const adminSet = new Set([req.user._id.toString()]);
-        
-        // Add admin list to admin section in database
+        // Add set of admins to members aswell
         if (admins && Array.isArray(admins)) {
             admins.forEach(adminId => adminSet.add(adminId));
         }
 
+        const finalAdmins = Array.from(adminSet);
+
+        // Create the club data object
         const clubData = {
             name,
             description,
-            admins: Array.from(adminSet), 
+            admins: finalAdmins,
+            members: finalAdmins, 
         };
 
         const newClub = await clubQueries.createClub(clubData);
