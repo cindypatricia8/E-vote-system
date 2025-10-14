@@ -88,8 +88,7 @@ const getElectionResults = async (req, res) => {
         }
 
         // Tally the anonymous ballots.
-        const rawResults = await ballotQueries.getElectionResults(electionId);
-        const totalBallots = await ballotQueries.countBallotsForElection(electionId);
+        const { results: rawResults, totalBallots } = await ballotQueries.getElectionResults(electionId);
 
         // Format the results.
         const formattedResults = election.positions.map(position => {

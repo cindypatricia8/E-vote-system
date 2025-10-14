@@ -42,43 +42,38 @@ const countBallotsForElection = async (electionId) => {
  */
 const getElectionResults = async (electionId) => {
     try {
-        const results = await Ballot.aggregate([
-            // Filter to only specified election
-            {
-                $match: { electionId: new mongoose.Types.ObjectId(electionId) }
-            },
-            // Process each vote individually
-            {
-                $unwind: '$selections'
-            },
-            // Use groupby for candidate and position
-            {
-                $group: {
-                    _id: {
-                        positionId: '$selections.positionId',
-                        candidateId: '$selections.candidateId'
-                    },
-                    voteCount: { $sum: 1 }
-                }
-            },
-            // format for clearer information
-            {
-                $project: {
-                    _id: 0,
-                    positionId: '$_id.positionId',
-                    candidateId: '$_id.candidateId',
-                    voteCount: '$voteCount'
-                }
-            },
-            // Sort results
-            {
-                $sort: {
-                    positionId: 1, // Group by position
-                    voteCount: -1  // Show winner first for each position
-                }
-            }
+        const objectId = new mongoose.Types.ObjectId(electionId);
+
+        // Run two queries in parallel for efficiency
+        const [results, totalBallots] = await Promise.all([
+            // Query 1: The aggregation pipeline to tally votes
+            Ballot.aggregate([
+                { $match: { electionId: objectId } },
+                { $unwind: '$selections' },
+                {
+                    $group: {
+                        _id: {
+                            positionId: '$selections.positionId',
+                            candidateId: '$selections.candidateId'
+                        },
+                        voteCount: { $sum: 1 }
+                    }
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        positionId: '$_id.positionId',
+                        candidateId: '$_id.candidateId',
+                        voteCount: '$voteCount'
+                    }
+                },
+                { $sort: { positionId: 1, voteCount: -1 } }
+            ]),
+            // Query 2: A simple count of all ballots for this election
+            Ballot.countDocuments({ electionId: objectId })
         ]);
-        return results;
+
+        return { results, totalBallots };
     } catch (error) {
         console.error(`Error tallying results for election ${electionId}:`, error.message);
         throw error;
