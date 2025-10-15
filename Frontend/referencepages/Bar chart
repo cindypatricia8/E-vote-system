@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Faculty and Gender Distribution</title>
+
+  <!-- Load Vega & Vega-Lite -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+
+<body style="background-color:#f4f6f8; font-family:Arial, sans-serif;">
+  <h2 style="text-align:center;">Faculty and Gender Distribution</h2>
+  <div id="faculty_gender_chart"></div>
+
+  <script type="text/javascript">
+    // Example data – replace with fetch('/api/faculty-gender') if using a backend
+    const data = [
+      {"Faculty": "Science", "Gender": "Male", "Count": 120},
+      {"Faculty": "Science", "Gender": "Female", "Count": 140},
+      {"Faculty": "Science", "Gender": "Other", "Count": 10},
+      {"Faculty": "Engineering", "Gender": "Male", "Count": 180},
+      {"Faculty": "Engineering", "Gender": "Female", "Count": 100},
+      {"Faculty": "Engineering", "Gender": "Other", "Count": 20},
+      {"Faculty": "Arts", "Gender": "Male", "Count": 90},
+      {"Faculty": "Arts", "Gender": "Female", "Count": 160},
+      {"Faculty": "Arts", "Gender": "Other", "Count": 15},
+      {"Faculty": "Business", "Gender": "Male", "Count": 110},
+      {"Faculty": "Business", "Gender": "Female", "Count": 130},
+      {"Faculty": "Business", "Gender": "Other", "Count": 5}
+    ];
+
+    const chartSpec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "description": "Side-by-side bar chart comparing gender distribution across faculties, including 'Other'.",
+      "width": 700,
+      "height": 400,
+      "data": {"values": data},
+      "mark": {"type": "bar"},
+      "encoding": {
+        "x": {
+          "field": "Faculty",
+          "type": "nominal",
+          "axis": {"labelAngle": 0, "title": "Faculty"}
+        },
+        "y": {
+          "field": "Count",
+          "type": "quantitative",
+          "title": "Number of Students"
+        },
+        "xOffset": {"field": "Gender"},  // shows bars side-by-side
+        "color": {
+          "field": "Gender",
+          "type": "nominal",
+          "scale": {
+            "domain": ["Male", "Female", "Other"],
+            "range": ["#4A90E2", "#FF69B4", "#9B59B6"]
+          },
+          "legend": {"title": "Gender"}
+        },
+        "tooltip": [
+          {"field": "Faculty", "title": "Faculty"},
+          {"field": "Gender", "title": "Gender"},
+          {"field": "Count", "title": "Count"}
+        ]
+      },
+      "config": {
+        "axis": {"labelFontSize": 12, "titleFontSize": 14},
+        "legend": {"labelFontSize": 12, "titleFontSize": 13}
+      }
+    };
+
+    vegaEmbed("#faculty_gender_chart", chartSpec);
+  </script>
+</body>
+</html>
