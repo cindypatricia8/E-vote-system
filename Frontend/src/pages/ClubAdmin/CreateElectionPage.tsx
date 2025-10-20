@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getClubById, createElection } from '../../api/apiService';
 import type { User, CreateElectionPayload } from '../../types';
 import UserSearchInput from '../../components/UserSearchInput';
@@ -19,7 +19,7 @@ interface PositionState {
 }
 
 const CreateElectionPage: React.FC = () => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const {clubId} = useParams<{clubId: string}>();
 
   const [title, setTitle] = useState('');

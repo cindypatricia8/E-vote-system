@@ -186,6 +186,32 @@ const deleteClubAndCascade = async (clubId) => {
     return club;
 };
 
+/**
+ * Promotes a user to be an admin of a club.
+ * Atomically adds their ID to both the admins and members arrays.
+ * @param {string} clubId - The ID of the club.
+ * @param {string} userId - The ID of the user to promote.
+ * @returns {Promise<object>} The updated club document.
+ */
+const addAdminToClub = async (clubId, userId) => {
+    try {
+        // Using add to set prevents duplicates.
+        return await Club.findByIdAndUpdate(
+            clubId,
+            { 
+                $addToSet: { 
+                    admins: userId,
+                    members: userId 
+                } 
+            },
+            { new: true }
+        );
+    } catch (error) {
+        console.error(`Error adding admin ${userId} to club ${clubId}:`, error.message);
+        throw error;
+    }
+};
+
 
 
 module.exports = {
@@ -198,5 +224,6 @@ module.exports = {
     removeMemberFromClub,
     isUserClubMember,
     deleteClubAndCascade,
-    findClubsByAdmin
+    findClubsByAdmin,
+    addAdminToClub,
 };
