@@ -17,5 +17,7 @@ router.delete('/:id', protect, restrictTo('systemAdmin'), clubController.deleteC
 // Club admin routes
 router.post('/:clubId/members', protect, clubController.addMember);
 router.delete('/:clubId/members/:memberId', protect, clubController.removeMember);
+router.post('/:clubId/admins', protect, clubController.addAdmin);
+
 
 module.exports = router;
