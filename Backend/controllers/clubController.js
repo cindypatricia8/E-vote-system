@@ -200,6 +200,38 @@ const removeMember = async (req, res) => {
     }
 };
 
+/**
+ * Adds a new admin to a club
+ * Only an existing admin of the club can perform this action
+ */
+const addAdmin = async (req, res) => {
+    try {
+        const { clubId } = req.params;
+        const { userId: userToPromoteId } = req.body;
+        const requestingUserId = req.user._id;
+
+        if (!userToPromoteId) {
+            return res.status(400).json({ message: 'User ID to promote is required.' });
+        }
+
+        const club = await clubQueries.findClubById(clubId);
+        if (!club) {
+            return res.status(404).json({ message: 'Club not found.' });
+        }
+
+        const isRequestingUserAdmin = club.admins.some(admin => admin._id.equals(requestingUserId));
+        if (!isRequestingUserAdmin) {
+            return res.status(403).json({ message: 'You do not have permission to add admins to this club.' });
+        }
+
+        const updatedClub = await clubQueries.addAdminToClub(clubId, userToPromoteId);
+        res.status(200).json({ status: 'success', data: { club: updatedClub } });
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Error promoting user to admin.', error: error.message });
+    }
+};
+
 module.exports = {
     createClub,
     getAllClubs,
@@ -208,5 +240,6 @@ module.exports = {
     deleteClub,
     addMember,
     removeMember,
-    getManagedClubs
+    getManagedClubs,
+    addAdmin,
 };
