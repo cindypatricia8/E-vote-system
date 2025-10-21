@@ -67,7 +67,6 @@ const LoginPage: React.FC = () => {
   return (
     <div className="login-page-container">
       <div className="instruction-box">
-        <div className="alert-logo" aria-hidden="true"></div>
         <span className="instruction-text">Sign in with your Account to Access Monash Portal Apps</span>
       </div>
 

@@ -103,8 +103,8 @@ const SignUp: React.FC = () => {
   }
 
   return (
-    <div className="signup-container">
-      <div className="signup-header">
+    <div className="container">
+      <div className="header">
         <h1>Create New User</h1>
         <p>Please fill in all the required fields marked with <span className="required">*</span></p>
       </div>
