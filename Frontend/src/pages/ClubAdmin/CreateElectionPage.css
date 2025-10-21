@@ -16,7 +16,12 @@
 
 /* --- Main Layout --- */
 /* (Assuming a parent sets the main page background) */
-
+.space-between{
+    padding-top:20px;
+}
+.space{
+    padding-top:10px;
+}
 .create-election-container {
     background-color: var(--bg-card);
     padding: 2.5rem;
@@ -124,7 +129,7 @@ textarea.form-input {
     padding: 1.5rem;
     border: 1px solid var(--border-color-light);
     border-radius: 8px;
-    background-color: var(--bg-card);
+    background-color: white ;
     margin-bottom: 1rem;
 }
 
@@ -286,3 +291,4 @@ textarea.form-input {
 .success-actions .btn-secondary:hover {
     background-color: var(--border-color-light);
 }
+
