@@ -126,7 +126,19 @@ const SignUp: React.FC = () => {
         
         <div className="form-group">
           <label htmlFor="faculty">Faculty <span className="required">*</span></label>
-          <input type="text" id="faculty" name="faculty" value={formData.faculty} onChange={handleChange} required />
+          <select id="faculty" name="faculty" value={formData.faculty} onChange={handleChange} required>
+          <option value="">Select Faculty</option>
+                  <option value="Art, Design & Architecture">Art, Design & Architecture</option>
+              <option value="Arts ">Arts</option>
+              <option value="Business and Economics">Business and Economics</option>
+              <option value="Education">Education</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Law">Law</option>
+              <option value="Medicine,Nursing and Health Sciences">Medicine,Nursing and Health Sciences</option>
+              <option value="Pharmacy and Pharmaceutical Sciences">Pharmacy and Pharmaceutical Sciences</option>
+              <option value="Science">Science</option>          
+            </select>
           {errors.faculty && <span className="error-message">{errors.faculty}</span>}
         </div>
         

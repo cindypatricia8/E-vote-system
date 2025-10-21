@@ -93,7 +93,7 @@ export default function ClubDetailsPage() {
 
   return (
     <div className="club-details-page">
-      
+
       <div className = "title-header">
         <div className='button-header'>
           <button onClick={() => navigate("/dashboard")}className="dashboard-btn">
@@ -137,14 +137,14 @@ export default function ClubDetailsPage() {
           </div>
           
           <div className="section">
-            <h2><i className="fas fa-check-circle"></i> Finished Elections</h2>
+            <h2><i className="fas fa-check-circle"></i> Past Elections</h2>
             {categorizedElections.finished.length > 0 ? (
               categorizedElections.finished.map(election => (
                 <div key={election._id} className="election-item finished">
                   <ElectionItem election={election} />
                 </div>
               ))
-            ) : <p className="no-elections-message">No finished elections.</p>}
+            ) : <p className="no-elections-message">No Past Elections.</p>}
           </div>
         </div>
       </div>

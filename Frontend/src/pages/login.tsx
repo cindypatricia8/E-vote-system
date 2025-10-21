@@ -122,11 +122,12 @@ const LoginPage: React.FC = () => {
         </form>
         
         <div className="toggle-container">
-          <span className="no-account">Don’t have an account?</span>
-          <button type="button" onClick={() => navigate('/register')} className="sign-up">
+         <span className="no-account">Don’t have an account? </span>
+         <button type="button" onClick={() => navigate('/register')} className="sign-up">
             Sign Up
           </button>
         </div>
+        
       </div>
     </div>
   );
