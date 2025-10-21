@@ -76,12 +76,12 @@ const UserDashboard: React.FC = () => {
         {/* Only show the Admin Panel button if the user is a system admin*/}
         {isAdmin && (
           <button type="button" onClick={() => navigate('/create-club')} className="admin-button">
-            Admin Panel
+            Create Clubs
           </button>
         )}
 
         <button type="button" onClick={logout} className="logout-button">
-          Logout
+          Sign Out
         </button>
       </header>
 

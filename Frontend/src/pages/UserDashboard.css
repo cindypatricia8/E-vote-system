@@ -11,7 +11,7 @@ body { margin: 0; font: 16px/1.45 system-ui, Segoe UI, Roboto, Helvetica, Arial,
 .wrap { max-width: 1000px; margin: 28px auto; padding: 0 16px; }
 
 /* Top bar */
-.topbar { display: flex; align-items: center; gap: 12px; }
+.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 20px;}
 .topbar h1 { margin: 0; font-size: 20px; }
 .spacer { flex: 1; }
 
@@ -69,3 +69,14 @@ body { margin: 0; font: 16px/1.45 system-ui, Segoe UI, Roboto, Helvetica, Arial,
   text-decoration: none;
 }
 .admin:hover { text-decoration: underline; }
+
+.admin-button:hover:not(:disabled) {
+  background-color: white;
+}
+.logout-button {
+  background-color: #4a90e2;
+  color:white;
+}
+.logout-button:hover:not(:disabled) {
+  background-color: #000;
+}
