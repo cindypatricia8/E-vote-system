@@ -77,7 +77,7 @@ const CreateClubPage: React.FC = () => {
         <div className="create-club-page">
             <header className="page-header">
                 <h1>Create a New Club</h1>
-                <Link to="/dashboard" className="home-button">Home</Link>
+                <Link to="/dashboard" className="home-button">Back to Dashboard</Link>
             </header>
 
             <div className="container">

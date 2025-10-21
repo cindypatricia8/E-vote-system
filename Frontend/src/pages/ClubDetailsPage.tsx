@@ -93,27 +93,26 @@ export default function ClubDetailsPage() {
 
   return (
     <div className="club-details-page">
-      <div className="topbar">
-        <div className="topbar-left">
-          <button onClick={() => navigate(-1)} aria-label="Go back">
-            <i className="fas fa-arrow-left"></i>
+      <div className = "title-header">
+        <div className='space-between'>
+          <button onClick={() => navigate("/dashboard")}className="dashboard-btn">
+            Back to Dashboard
           </button>
         </div>
-        <div className="topbar-center">{club.name}</div>
-        <div className="topbar-right"></div> 
-      </div>
-
-      <div className="club-details-container">
-        <header>
+          
           <h1>{club.name}</h1>
           <p>{club.description}</p>
           {isClubAdmin && (
-            <button onClick={() => navigate(`/club/${club._id}/manage`)}className="manage-club-btn">
-              <i className="fas fa-cog"></i> Manage Club
-            </button>
+            <div className = 'space-between'>
+              <button onClick={() => navigate(`/club/${club._id}/manage`)}className="manage-club-btn">
+               Manage Club
+              </button>
+            </div>
           )}
-        </header>
-        
+        </div>
+
+      <div className="club-details-container">
+      
         <div className="dashboard">
           <div className="section">
             <h2><i className="fas fa-clock"></i> Current Elections</h2>

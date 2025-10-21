@@ -180,18 +180,16 @@ const CreateElectionPage: React.FC = () => {
           <h1 className="text-3xl font-bold mb-2 text-center text-indigo-700">
             Create a New Election
           </h1>
-          <h2 className="text-xl font-medium mb-6 text-center text-gray-500">
-            For: {clubName}
-          </h2>
+          
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Election details */}
             <div className="p-4 border border-gray-200 rounded-lg space-y-4">
               <h2 className="text-xl font-semibold text-gray-800">
-                Election Details
+                Election Details for: <span className="clubname"> {clubName}</span>
               </h2>
               <div>
                 <label className="block text-gray-700 font-medium mb-2">
-                  Election Name*
+                  Election Name
                 </label>
                 <input
                   type="text"

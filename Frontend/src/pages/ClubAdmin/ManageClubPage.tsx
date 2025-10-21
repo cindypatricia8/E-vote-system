@@ -188,17 +188,7 @@ const ManageClubPage: React.FC = () =>
   return (
     <div className="manage-club-page">
       <h1>Manage: {club.name}</h1>
-      <div className="admin-button-panel">
-        <button
-          className="new-election"
-          onClick={() => navigate(`/club/${clubId}/create-election`)}
-        >
-          + Create New Election
-        </button>
-        <Link to={`/club/${clubId}`} className="view-public">
-          View Public Page
-        </Link>
-      </div>
+     
 
       <div className="admin-cards">
         <div className="admin-card" style={{ background: "#2980b9" }}>
