@@ -72,6 +72,8 @@ export const addMemberToClub = (clubId: string, userId: string) =>
 export const removeMemberFromClub = (clubId: string, memberId: string) =>
     api.delete<{ status: 'success', data: { club: Club } }>(`/clubs/${clubId}/members/${memberId}`);
 
+export const addAdminToClub = (clubId: string, userId: string) =>
+    api.post<{ status: 'success', data: { club: Club } }>(`/clubs/${clubId}/admins`, { userId });
 
 // ELECTION API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

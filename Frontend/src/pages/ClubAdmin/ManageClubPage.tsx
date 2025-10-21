@@ -7,6 +7,7 @@ import
     getElectionsByClub,
     addMemberToClub,
     removeMemberFromClub,
+    addAdminToClub,
   } from "../../api/apiService";
 import type { Club, Election, User } from "../../types";
 import UserSearchInput from "../../components/UserSearchInput";
@@ -105,6 +106,22 @@ const ManageClubPage: React.FC = () =>
     }
   };
 
+  const handlePromoteMember = async (memberId: string) => {
+    if (
+      !clubId ||
+      !window.confirm(
+        "Are you sure you want to promote this member to an admin?"
+      )
+    )
+      return;
+    try {
+      await addAdminToClub(clubId, memberId);
+      fetchData(); // Refetch all data to update both admin and member lists
+    } catch (error) {
+      alert("Failed to promote member.");
+    }
+  };
+
   // Create a list of IDs to exclude from the search (current members + current user)
   const excludeFromSearchIds = useMemo(() =>
   {
@@ -192,43 +209,54 @@ const ManageClubPage: React.FC = () =>
               excludeIds={excludeFromSearchIds}
             />
           </div>
-          <ul className="member-list">
-            {club.members.length > 0 ? (
-              club.members.map((member) =>
-              {
-                const memberDetails =
-                  typeof member === "object" ? member : null;
-                if (!memberDetails) return null;
+            <ul className="member-list">
+                {club.members.length > 0 ? (
+                    club.members.map((member) => {
+                        const memberDetails = typeof member === 'object' ? member : null;
+                        if (!memberDetails) return null;
 
-                //const isLastAdmin = club.admins.length === 1 && club.admins[0]. === memberDetails._id;
+                        // Check if this member is already an admin
+                        const isMemberAdmin = club.admins.some(admin => 
+                            (typeof admin === 'string' ? admin : admin._id) === memberDetails._id
+                        );
 
-                return (
-                  <li key={memberDetails._id} className="member-item">
-                    <div className="member-info">
-                      <div className="name">{memberDetails.name}</div>
-                      <div className="id">ID: {memberDetails.studentId}</div>
-                    </div>
-                    <button
-                      className="remove-member-btn"
-                      onClick={() => handleRemoveMember(memberDetails._id)}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                );
-              })
-            ) : (
-              <p
-                style={{
-                  textAlign: "center",
-                  color: "#7f8c8d",
-                  padding: "1rem",
-                }}
-              >
-                No members in this club yet.
-              </p>
-            )}
-          </ul>
+                        // Prevent removing the last admin
+                        const isLastAdmin = isMemberAdmin && club.admins.length === 1;
+
+                        return (
+                            <li key={memberDetails._id} className="member-item">
+                                <div className="member-info">
+                                    <div className="name">{memberDetails.name}</div>
+                                    <div className="id">ID: {memberDetails.studentId}</div>
+                                </div>
+                                
+                                <div className="member-actions">
+                                    {!isMemberAdmin && (
+                                        <button
+                                            className="promote-member-btn"
+                                            onClick={() => handlePromoteMember(memberDetails._id)}
+                                        >
+                                            Promote
+                                        </button>
+                                    )}
+                                    <button
+                                        className="remove-member-btn"
+                                        onClick={() => handleRemoveMember(memberDetails._id)}
+                                        disabled={isLastAdmin}
+                                        title={isLastAdmin ? "Cannot remove the last admin" : "Remove member"}
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            </li>
+                        );
+                    })
+                ) : (
+                    <p style={{ textAlign: 'center', color: '#7f8c8d', padding: '1rem' }}>
+                        No members in this club yet.
+                    </p>
+                )}
+            </ul>
         </div>
 
         <div className="manage-section">
