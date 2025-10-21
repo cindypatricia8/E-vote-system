@@ -6,9 +6,15 @@
 }
 .title-header{
   text-align: center;
-  padding-top: 50px;  
+  padding-top: 10px;  
   margin-bottom: 10px 10px;
   color:gray;
+}
+.button-header{
+  padding-top: 100px;  
+  margin-bottom: 10px 10px;
+  text-align:right;
+  margin-right: 20px;
 }
 /* Container for main content */
 .club-details-container {
@@ -41,11 +47,8 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-left:auto;
 }
-.stick-right{
-  margin-left: auto;
-}
+
 .manage-club-btn {
   background-color: #e67e22;
   color: white;
@@ -60,7 +63,9 @@
 .manage-club-btn:hover {
   background-color: #d35400;
 }
-
+.dashboard-btn:hover {
+  background-color: #3498db;
+}
 /* Section styling */
 .section {
   background-color: white;

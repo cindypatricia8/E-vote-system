@@ -188,7 +188,7 @@ const CreateElectionPage: React.FC = () => {
                 Election Details for: <span className="clubname"> {clubName}</span>
               </h2>
               <div>
-                <label className="block text-gray-700 font-medium mb-2">
+                <label className="form-label-required">
                   Election Name
                 </label>
                 <input
@@ -201,8 +201,8 @@ const CreateElectionPage: React.FC = () => {
               </div>
               <div className="flex space-x-4">
                 <div className="flex-1">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Start Date*
+                  <label className="form-label-required">
+                    Start Date
                   </label>
                   <input
                     type="datetime-local"
@@ -212,8 +212,8 @@ const CreateElectionPage: React.FC = () => {
                   />
                 </div>
                 <div className="flex-1">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    End Date*
+                  <label className="form-label-required">
+                    End Date
                   </label>
                   <input
                     type="datetime-local"

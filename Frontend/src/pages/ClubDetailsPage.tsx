@@ -93,13 +93,13 @@ export default function ClubDetailsPage() {
 
   return (
     <div className="club-details-page">
+      
       <div className = "title-header">
-        <div className='space-between'>
+        <div className='button-header'>
           <button onClick={() => navigate("/dashboard")}className="dashboard-btn">
             Back to Dashboard
           </button>
         </div>
-          
           <h1>{club.name}</h1>
           <p>{club.description}</p>
           {isClubAdmin && (
