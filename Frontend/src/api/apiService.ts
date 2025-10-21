@@ -10,6 +10,7 @@ import type {
   User,
   UpdateProfilePayload,
   CreateElectionPayload,
+  UpdateElectionPayload,
 } from "../types";
 
 // Create a configured instance of Axios
@@ -88,6 +89,13 @@ export const getElectionById = (electionId: string) =>
 
 export const getElectionsByClub = (clubId: string) =>
     api.get<{ status: 'success', data: { elections: Election[] } }>(`/elections/club/${clubId}`);
+
+export const updateElection = (electionId: string, updateData: UpdateElectionPayload) => {
+    return api.put<{ status: 'success', data: { election: Election } }>(
+        `/elections/${electionId}`,
+        updateData
+    );
+};
 
 // VOTE API =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 

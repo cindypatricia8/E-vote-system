@@ -8,6 +8,7 @@ import
     addMemberToClub,
     removeMemberFromClub,
     addAdminToClub,
+    updateElection,
   } from "../../api/apiService";
 import type { Club, Election, User } from "../../types";
 import UserSearchInput from "../../components/UserSearchInput";
@@ -116,10 +117,27 @@ const ManageClubPage: React.FC = () =>
       return;
     try {
       await addAdminToClub(clubId, memberId);
-      fetchData(); // Refetch all data to update both admin and member lists
+      fetchData(); 
     } catch (error) {
       alert("Failed to promote member.");
     }
+  };
+
+  const handleStartElection = async (electionId: string) => {
+        if (!window.confirm('Are you sure you want to start this election? This will set the start time to now.')) return;
+        
+        try {
+            const now = new Date();
+            
+            await updateElection(electionId, { 
+                status: 'active', 
+                startTime: now.toISOString() 
+            });
+
+            fetchData();
+        } catch (error) {
+            alert('Failed to start the election.');
+        }
   };
 
   // Create a list of IDs to exclude from the search (current members + current user)
@@ -272,9 +290,19 @@ const ManageClubPage: React.FC = () =>
                       {new Date(election.startTime).toLocaleDateString()}
                     </div>
                   </div>
-                  <span className={`status status-${election.status}`}>
-                    {election.status}
-                  </span>
+                  <div className="election-actions">
+                    {election.status === 'draft' && (
+                      <button
+                        className="start-election-btn"
+                        onClick={() => handleStartElection(election._id)}
+                      >
+                        Start Now
+                      </button>
+                    )}
+                    <span className={`status status-${election.status}`}>
+                      {election.status}
+                    </span>
+                  </div>
                 </li>
               ))
             ) : (

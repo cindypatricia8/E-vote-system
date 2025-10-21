@@ -140,3 +140,12 @@ export interface CreateElectionPayload {
     endTime: string;
     positions: CreatePositionPayload[];
 }
+
+export type UpdateElectionPayload = Partial<{
+  title: string;
+  description: string;
+  startTime: string;
+  endTime: string;
+  status: 'draft' | 'active' | 'closed';
+  positions: any[]; 
+}>;
