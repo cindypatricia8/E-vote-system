@@ -157,6 +157,19 @@ const getElectionsForClub = async (req, res) => {
     }
 };
 
+/**
+ * Retrieves detailed analytics for an election.
+ */
+const getAnalyticsForElection = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const analyticsData = await electionQueries.getElectionAnalytics(id);
+        res.status(200).json({ status: 'success', data: analyticsData });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching election analytics.', error: error.message });
+    }
+};
+
 module.exports = {
     createElection,
     getActiveElections,
@@ -164,4 +177,5 @@ module.exports = {
     updateElection,
     deleteElection,
     getElectionsForClub,
+    getAnalyticsForElection,
 };

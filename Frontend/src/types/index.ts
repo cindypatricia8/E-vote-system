@@ -149,3 +149,10 @@ export type UpdateElectionPayload = Partial<{
   status: 'draft' | 'active' | 'closed';
   positions: any[]; 
 }>;
+
+export interface ElectionAnalyticsData {
+  totalEligibleVoters: number;
+  totalVotersWhoVoted: number;
+  participationRate: number;
+  votesByFaculty: { [faculty: string]: number };
+}

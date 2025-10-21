@@ -9,6 +9,7 @@ router.use(protect);
 router.post('/', electionController.createElection); // Permissions checked inside controller
 router.get('/active', electionController.getActiveElections);
 router.get('/club/:clubId', electionController.getElectionsForClub);
+router.get('/:id/analytics', protect, electionController.getAnalyticsForElection);
 
 router.route('/:id')
     .get(electionController.getElectionById)

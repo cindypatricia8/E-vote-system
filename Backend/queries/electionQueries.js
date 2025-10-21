@@ -117,6 +117,39 @@ const deleteElection = async (electionId) => {
     }
 };
 
+const getElectionAnalytics = async (electionId) => {
+    try {
+        const objectId = new mongoose.Types.ObjectId(electionId);
+
+        const election = await Election.findById(objectId).populate('clubId');
+        if (!election) {
+            throw new Error('Election not found');
+        }
+
+        const voters = await User.find({ votedInElections: objectId });
+
+        const votesByFaculty = voters.reduce((acc, voter) => {
+            const faculty = voter.faculty || 'Unknown';
+            acc[faculty] = (acc[faculty] || 0) + 1;
+            return acc;
+        }, {});
+
+        const totalEligibleVoters = election.clubId.members.length;
+        
+        const participationRate = totalEligibleVoters > 0 ? (voters.length / totalEligibleVoters) * 100 : 0;
+        
+        return {
+            totalEligibleVoters,
+            totalVotersWhoVoted: voters.length,
+            participationRate,
+            votesByFaculty,
+        };
+    } catch (error) {
+        console.error(`Error getting analytics for election ${electionId}:`, error.message);
+        throw error;
+    }
+};
+
 
 module.exports = {
     createElection,
@@ -126,4 +159,5 @@ module.exports = {
     findElectionsByClub,
     updateElection,
     deleteElection,
+    getElectionAnalytics,
 };
