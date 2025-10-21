@@ -111,6 +111,3 @@ button {
 
 
 
-.container { width: 100%; max-width: 1200px; margin: 0 auto; }
-@media (max-width: 900px) { .container { max-width: none; } }
-

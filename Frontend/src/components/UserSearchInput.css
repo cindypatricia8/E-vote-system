@@ -22,7 +22,7 @@
   padding: 0.75rem 1rem;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out;
-  color: #1f2937; /* Dark text for light background */
+  color: #6b7280; /* Dark text for light background */
 }
 .search-result-item:hover {
   background-color: #f3f4f6; /* Light gray hover */

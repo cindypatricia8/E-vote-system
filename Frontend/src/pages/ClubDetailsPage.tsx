@@ -95,11 +95,9 @@ export default function ClubDetailsPage() {
     <div className="club-details-page">
 
       <div className = "title-header">
-        <div className='button-header'>
-          <button onClick={() => navigate("/dashboard")}className="dashboard-btn">
+           <button onClick={() => navigate("/dashboard")}className="dashboard-btn">
             Back to Dashboard
           </button>
-        </div>
           <h1>{club.name}</h1>
           <p>{club.description}</p>
           {isClubAdmin && (

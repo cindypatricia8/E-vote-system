@@ -245,7 +245,7 @@ const CreateElectionPage: React.FC = () => {
               {positions.map((pos, pIndex) => (
                 <div
                   key={pIndex}
-                  className="p-4 border border-gray-200 rounded-lg space-y-4 bg-gray-50"
+                  className="space-between"
                 >
                   <input
                     type="text"
@@ -265,13 +265,13 @@ const CreateElectionPage: React.FC = () => {
                       key={cIndex}
                       className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 items-center"
                     >
-                      <div className="flex-1 w-full">
+                      <div className="space">
                         {cand.user ? (
                           <div
                             className="admin-pill"
                             style={{
                               backgroundColor: "#e0e7ff",
-                              color: "#4338ca",
+                              color: "#5a5774ff",
                               justifyContent: "space-between",
                               width: "100%",
                               padding: "0.65rem 1rem",
@@ -290,6 +290,7 @@ const CreateElectionPage: React.FC = () => {
                             </button>
                           </div>
                         ) : (
+                          <div>
                           <UserSearchInput
                             onUserSelect={(user) =>
                               handleSelectCandidate(pIndex, cIndex, user)
@@ -299,8 +300,11 @@ const CreateElectionPage: React.FC = () => {
                               pos.candidates
                                 .map((c) => c.user?._id)
                                 .filter(Boolean) as string[]
+                
                             }
+                            
                           />
+                          </div>
                         )}
                       </div>
                       <input
@@ -327,6 +331,7 @@ const CreateElectionPage: React.FC = () => {
                   </button>
                 </div>
               ))}
+              <div className='space-between'>
               <button
                 type="button"
                 onClick={addPosition}
@@ -334,6 +339,7 @@ const CreateElectionPage: React.FC = () => {
               >
                 + Add another Position
               </button>
+              </div>
             </div>
 
             {error && (

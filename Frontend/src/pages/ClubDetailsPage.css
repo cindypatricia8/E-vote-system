@@ -1,20 +1,19 @@
 .club-details-page {
   background-color: lightgray;
   --min-height: 100vh;
-   padding-top: 100px;   
+   padding-top: 50px;   
    padding-bottom: 5px; 
 }
 .title-header{
   text-align: center;
-  padding-top: 10px;  
   margin-bottom: 10px 10px;
   color:gray;
 }
 .button-header{
-  padding-top: 100px;  
   margin-bottom: 10px 10px;
   text-align:right;
-  margin-right: 20px;
+  margin-left: 480px;
+  width:30%;
 }
 /* Container for main content */
 .club-details-container {
@@ -42,13 +41,14 @@
   background-color: #2980b9;
   color: white;
   padding: 0.6rem 1.2rem;
+  padding-top: 10px;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  width:30%;
 }
-
 .manage-club-btn {
   background-color: #e67e22;
   color: white;
@@ -59,6 +59,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  width:30%;
 }
 .manage-club-btn:hover {
   background-color: #d35400;
