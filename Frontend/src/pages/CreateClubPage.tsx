@@ -91,7 +91,7 @@ const CreateClubPage: React.FC = () => {
 
                 <form onSubmit={handleSubmit} noValidate>
                     <div className="form-group">
-                        <label htmlFor="clubName">Club Name</label>
+                       <label htmlFor="clubname" className="label-white">Club Name</label>
                         <input
                             type="text"
                             id="clubName"
@@ -124,7 +124,7 @@ const CreateClubPage: React.FC = () => {
                             excludeIds={excludedAdminIds}
                         />
                         
-                        <div className="text-xs text-gray-400 mt-2">The user who creates the club is automatically an admin.</div>
+                        <label htmlFor='instruction'>The user who creates the club is automatically an admin.</label>
                         
                         <div className="selected-admins-list">
                             {selectedAdmins.map(admin => (
