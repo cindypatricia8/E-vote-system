@@ -2,6 +2,7 @@
 .club-admin-layout {
   display: flex;
   min-height: 100vh;
+  max-height: 100vh; 
 }
 
 
@@ -69,12 +70,10 @@
 .club-admin-main-content {
   flex-grow: 1; 
   padding: 30px;
-  overflow-y: auto;
-  display: flex; 
-  flex-direction: column; 
+  overflow-y: auto; 
+  min-height: 0; 
 }
 
-/* --- Styles from ManageClubPage.css are now here --- */
 
 .club-admin-main-content h1 {
   margin-bottom: 30px;

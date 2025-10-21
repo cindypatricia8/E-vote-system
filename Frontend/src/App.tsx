@@ -12,6 +12,7 @@ import ElectionDetailsPage from './pages/ElectionDetailsPage';
 
 import ManageClubPage from './pages/ClubAdmin/ManageClubPage';
 import CreateElectionPage from './pages/ClubAdmin/CreateElectionPage';
+import AnalyticsPage from './pages/ClubAdmin/AnalyticsPage';
 import ClubAdminLayout from './pages/ClubAdmin/ClubAdminLayout';
 import UserDashboard from './pages/UserDashboard';
 
@@ -39,6 +40,7 @@ function App() {
           <Route element={<ClubAdminLayout/>}>
             <Route path="/club/:clubId/manage" element={<ManageClubPage/>} />
             <Route path="/club/:clubId/create-election" element={<CreateElectionPage/>} />
+            <Route path="/club/:clubId/analytics" element={<AnalyticsPage />} />
           </Route>
 
           <Route path="/election/:electionId" element={<ElectionDetailsPage />} />

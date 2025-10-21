@@ -37,6 +37,7 @@ const ClubAdminLayout: React.FC = () => {
         <ul>
           <li><NavLink to={`/club/${clubId}/manage`}>Overview</NavLink></li>
           <li><NavLink to={`/club/${clubId}/create-election`}>New Election</NavLink></li>
+          <li><NavLink to={`/club/${clubId}/analytics`}>Analytics</NavLink></li>
         </ul>
         <div className="sidebar-footer">
           <Link to={`/club/${clubId}`}>← Back to Public View</Link>
