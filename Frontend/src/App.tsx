@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import Login from './pages/login';
 import SignUp from './pages/signUp';
 import ClubDetailsPage from './pages/ClubDetailsPage';
-import votepagetest from './pages/voting';
+
 import VotingPage from './pages/VotingPage';
 import CreateClubPage from './pages/CreateClubPage';
 import ElectionDetailsPage from './pages/ElectionDetailsPage';
