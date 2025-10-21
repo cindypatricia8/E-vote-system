@@ -80,7 +80,7 @@ const LoginPage: React.FC = () => {
     
         <form className="userForm" onSubmit={onSubmit} noValidate>
           <div className="form-group">
-            <label htmlFor="studentId" className="form-label">Student ID</label>
+            <label htmlFor="studentId" className="form-label-required">Student ID</label>
             <input
               id="studentId" 
               name="studentId" 
@@ -94,7 +94,7 @@ const LoginPage: React.FC = () => {
           </div>
           
           <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
+            <label htmlFor="password" className="form-label-required">Password</label>
             <input
               id="password" 
               name="password" 
@@ -108,7 +108,9 @@ const LoginPage: React.FC = () => {
           </div>
 
           <div className="remember-row">
-            <input id="remember" type="checkbox" />
+            <input 
+            id="remember" 
+            type="checkbox" />
             <label htmlFor="remember">Remember me</label>
           </div>
           
