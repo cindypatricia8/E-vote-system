@@ -80,7 +80,7 @@ const AnalyticsPage: React.FC = () => {
     // Data for Votes by Candidate (Bar Chart)
     const allCandidates = results.flatMap(pos => pos.candidates);
     const barChartLabels = allCandidates.map(c => c.name);
-    const barChartData = allCandidates.map(c => c.voteCount);
+    const barChartData = allCandidates.map(c => c.voteCount);;
 
     // Data for Votes per Position (Pie Chart)
     const pieChartLabels = results.map(pos => pos.positionTitle);
@@ -137,19 +137,39 @@ const AnalyticsPage: React.FC = () => {
 
           <div className="charts-grid">
             <div className="chart-container">
-              <h3>Votes by Candidate</h3>
+              <h3>Votes of Candidate by Position</h3>
+
+              {/* Responsive grid of charts */}
               <div style={{ position: 'relative', height: '100%' }}>
-              {chartData && (
-                <Bar 
-                  data={{
-                    labels: chartData.barChartLabels,
-                    datasets: [{ label: 'Total Votes', data: chartData.barChartData, backgroundColor: '#3498db' }]
-                  }}
-                  options={{ responsive: true,maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }}
-                />
-              )}
+                {results.map((pos) => {
+                  const labels = pos.candidates.map(c => c.name);
+                  const data = pos.candidates.map(c => c.voteCount);
+                  const barThickness = 20;
+
+                  return (
+                    <div key={pos.positionTitle} style={{ background:"#fff", borderRadius:12, padding:16, boxShadow:"0 1px 4px rgba(0,0,0,.06)", height:200}}>
+                      <h3 style={{ margin: "0 0 8px" }}>{pos.positionTitle}</h3>
+                      <Bar
+                        data={{
+                          labels,
+                          datasets: [{
+                            label: 'Total Votes',
+                            data,
+                            backgroundColor: '#f1c40f',
+                            maxBarThickness:48 ,
+                          }]
+                        }}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                        }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
+            
             <div className="chart-container">
               <h3>Votes per Position</h3>
               <div style={{ position: 'relative', height: '100%' }}>
