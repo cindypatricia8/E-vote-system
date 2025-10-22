@@ -70,7 +70,11 @@ const UserDashboard: React.FC = () => {
   return (
     <div className="dashboard-wrap">
       <header className="topbar">
-        <h1>My Clubs</h1>
+        <div className="column">
+          <h1>My Clubs</h1>
+           <p> Press clubs card to find updates on live elections</p>
+        </div>
+          
         <div className="spacer" />
         
         {/* Only show the Admin Panel button if the user is a system admin*/}

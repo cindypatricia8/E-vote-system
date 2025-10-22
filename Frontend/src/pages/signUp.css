@@ -34,7 +34,7 @@ body {
 }
 
 .header p {
-  color: lightslategray;
+  color: lightgray;
 }
 
 .form-group {
@@ -52,12 +52,14 @@ body {
   flex: 1;
 }
 
-label {
+.label {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #000000;
 }
+
+.form-group > label { color: #000 !important; }
+
 
 input,
 select {
