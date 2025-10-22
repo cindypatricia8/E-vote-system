@@ -1,55 +1,99 @@
-const { kmeans } = require("ml-kmeans");
 const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
+const fs = require("fs");
 
-const docs = [
-  { voterId: "1", counter: 0 },
-  { voterId: "2", counter: 0 },
-  { voterId: "3", counter: 1 },
-  { voterId: "4", counter: 1 },
-  { voterId: "5", counter: 2 },
-  { voterId: "6", counter: 2 },
+// --- Step 1: Past election data ---
+const elections = [
+  { candidateA: 120, candidateB: 90, candidateC: 60, winner: "A" },
+  { candidateA: 150, candidateB: 180, candidateC: 100, winner: "B" },
+  { candidateA: 200, candidateB: 190, candidateC: 210, winner: "C" },
+  { candidateA: 90, candidateB: 140, candidateC: 130, winner: "B" },
+  { candidateA: 300, candidateB: 280, candidateC: 250, winner: "A" },
+  { candidateA: 170, candidateB: 150, candidateC: 100, winner: "A" },
+  { candidateA: 130, candidateB: 160, candidateC: 180, winner: "C" },
+  { candidateA: 220, candidateB: 200, candidateC: 210, winner: "C" },
 ];
 
-async function runTestAndGraph() {
-  const votes = docs.map(doc => [doc.counter]);
-  const k = 3;
-  const result = kmeans(votes, k);
+// --- Step 2: Calculate average performance ---
+const totals = { A: 0, B: 0, C: 0 };
+const counts = { A: 0, B: 0, C: 0 };
 
-  // Create chart
-  const width = 600;
-  const height = 400;
+for (const e of elections) {
+  totals.A += e.candidateA;
+  totals.B += e.candidateB;
+  totals.C += e.candidateC;
+  counts.A++;
+  counts.B++;
+  counts.C++;
+}
+
+const averages = {
+  A: totals.A / counts.A,
+  B: totals.B / counts.B,
+  C: totals.C / counts.C,
+};
+
+// --- Step 3: Predict based on new election data ---
+const newElection = { candidateA: 180, candidateB: 200, candidateC: 170 };
+
+// We'll assume the winner is whoever performs best relative to their average
+const performanceRatios = {
+  A: newElection.candidateA / averages.A,
+  B: newElection.candidateB / averages.B,
+  C: newElection.candidateC / averages.C,
+};
+
+const predictedWinner = Object.keys(performanceRatios).reduce((a, b) =>
+  performanceRatios[a] > performanceRatios[b] ? a : b
+);
+
+console.log(`✅ Predicted Winner: Candidate ${predictedWinner}`);
+
+// --- Step 4: Create chart ---
+async function createChart() {
+  const width = 700;
+  const height = 450;
   const chartJSNodeCanvas = new ChartJSNodeCanvas({ width, height });
 
+  const candidates = Object.keys(newElection);
+  const votes = Object.values(newElection);
+
+  const colors = candidates.map(c =>
+    c === `candidate${predictedWinner}` ? "rgba(255, 99, 132, 0.8)" : "rgba(54, 162, 235, 0.6)"
+  );
+
   const data = {
-    labels: docs.map(d => d.voterId),
+    labels: candidates,
     datasets: [{
-      label: "Votes",
-      data: votes.map((v, i) => ({ x: i+1, y: v[0], cluster: result.clusters[i] })),
-      backgroundColor: votes.map((_, i) => {
-        const colors = ["red", "green", "blue"];
-        return colors[result.clusters[i]];
-      }),
-      type: 'scatter'
+      label: "Vote Counts (Predicted Election)",
+      data: votes,
+      backgroundColor: colors,
+      borderWidth: 2,
+      borderColor: "black"
     }]
   };
 
   const configuration = {
-    type: "scatter",
+    type: "bar",
     data: data,
     options: {
       plugins: {
+        title: {
+          display: true,
+          text: `Predicted Winner: Candidate ${predictedWinner}`,
+          font: { size: 20 }
+        },
         legend: { display: false }
       },
       scales: {
-        x: { title: { display: true, text: "Voter Index" } },
-        y: { title: { display: true, text: "Vote Counter" } }
+        y: { beginAtZero: true, title: { display: true, text: "Votes" } },
+        x: { title: { display: true, text: "Candidates" } }
       }
     }
   };
 
   const image = await chartJSNodeCanvas.renderToBuffer(configuration);
-  require("fs").writeFileSync("clusters.png", image);
-  console.log("Graph saved as clusters.png");
+  fs.writeFileSync("predicted_winner_chart.png", image);
+  console.log("📊 Chart saved as predicted_winner_chart.png");
 }
 
-runTestAndGraph();
+createChart();
