@@ -1,5 +1,13 @@
-const { ChartJSNodeCanvas } = require("chartjs-node-canvas");
-const fs = require("fs");
+const { ChartJSNodeCanvas } = require('chartjs-node-canvas');
+require('chart.js/auto');
+
+const KMeansMod = require('ml-kmeans');        // ESM module
+const PCAmod = require('ml-pca');              // may also be ESM depending on version
+const KMeans = KMeansMod.default || KMeansMod; // get the function
+const PCA = PCAmod.default || PCAmod;
+
+const fs = require('fs');
+
 
 // --- Step 1: Past election data ---
 const elections = [
