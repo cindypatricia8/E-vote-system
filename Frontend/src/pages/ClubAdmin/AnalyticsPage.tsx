@@ -121,16 +121,16 @@ export default function AnalyticsPage() {
       ) : selectedElection && results && analytics? (
         <>
           <div className="admin-cards">
-            <div className="admin-card" style={{ background: '#27ae60' }}>
+            <div className="admin-card" style={{ background: '#04a319ff' }}>
               <h3>Participation</h3><p>{analytics.participationRate.toFixed(1)}%</p>
             </div>
-            <div className="admin-card" style={{ background: '#2980b9' }}>
+            <div className="admin-card" style={{ background: '#04a319ff' }}>
               <h3>Eligible Voters</h3><p>{analytics.totalEligibleVoters}</p>
             </div>
-            <div className="admin-card" style={{ background: '#e67e22' }}>
+            <div className="admin-card" style={{ background: '#04a319ff' }}>
               <h3>Ballots Cast</h3><p>{totalBallots}</p>
             </div>
-            <div className="admin-card" style={{ background: '#8e44ad' }}>
+            <div className="admin-card" style={{ background: '#04a319ff' }}>
               <h3>Positions</h3><p>{results.length}</p>
             </div>
           </div>
