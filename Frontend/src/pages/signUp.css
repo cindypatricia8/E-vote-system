@@ -1,19 +1,25 @@
 * {
-
   margin: 0;
   padding: 0;
-  width :100%;
+
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
   background: #0f1b27;              /* or your gradient */
-  min-height: 100vh;
-  /* remove centering */
+  min-height: 100%;
   display: block;
   padding: 0;                        /* optional */
 }
-
+.box{
+  background: rgb(6, 6, 65);
+  border: 1px solid #e5e7eb;   /* remove if you prefer only shadow */
+  border-radius: 12px;
+  padding: 16px;               /* inner spacing */
+  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  width: 50%;
+  margin: 24px auto; 
+}
 /* full width container */
 
 .header {
