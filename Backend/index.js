@@ -13,7 +13,23 @@ dotenv.config({ path: './config/.env' }); // Make sure the path to your .env is 
 
 const app = express();
 
-app.use(cors()); // Enable Cross-Origin Resource Sharing
+const allowedOrigins = [
+    process.env.CLIENT_URL,      
+    'http://localhost:5173'   
+];
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions)); // Enable Cross-Origin Resource Sharing
 app.use(express.json()); // Body parser for JSON requests
 
 // Connect to Database =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=

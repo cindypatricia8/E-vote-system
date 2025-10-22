@@ -18,7 +18,7 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
-export default function AnalyticsPage() {
+const AnalyticsPage: React.FC = () => {
   const { clubId } = useParams<{ clubId: string }>();
   const [elections, setElections] = useState<Election[]>([]);
   const [selectedElectionId, setSelectedElectionId] = useState<string>('');
@@ -197,3 +197,5 @@ export default function AnalyticsPage() {
     </div>
   );
 }
+
+export default AnalyticsPage;

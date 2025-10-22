@@ -31,9 +31,9 @@ const registerUser = async (req, res) => {
             email,
             name,
             passwordHash: password, // Pass the plain password to be hashed by the model
-            faculty,      // Now included
-            gender,       // Now included
-            yearOfStudy,  // Now included
+            faculty,      
+            gender,       
+            yearOfStudy,  
         });
 
         // Generate login token

@@ -25,8 +25,7 @@ interface DisplayPosition
 }
 
 
-export default function ElectionDetailsPage()
-{
+const ElectionDetailsPage: React.FC = () => {
     const { electionId } = useParams<{ electionId: string }>();
     const [election, setElection] = useState<Election | null>(null);
     const [results, setResults] = useState<FormattedResult[] | null>(null);
@@ -172,3 +171,6 @@ export default function ElectionDetailsPage()
         </div>
     );
 }
+
+
+export default ElectionDetailsPage;
