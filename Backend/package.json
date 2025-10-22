@@ -25,8 +25,7 @@
     "ml-kmeans": "^6.0.0",
     "ml-pca": "^4.1.1",
     "mongoose": "^8.17.1",
-    "nodemon": "^3.1.10",
-    "type":"module"
+    "nodemon": "^3.1.10"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.0.0"
