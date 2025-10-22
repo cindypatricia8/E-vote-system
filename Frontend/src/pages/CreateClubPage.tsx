@@ -64,7 +64,7 @@ const CreateClubPage: React.FC = () => {
 
             await createClub(payload);
             setMessage({ type: 'success', text: 'Club created successfully! Redirecting...' });
-            setTimeout(() => navigate('/clubs'), 2000);
+            setTimeout(() => navigate('/dashboard'), 2000);
         } catch (err: any) {
             const errorMsg = err.response?.data?.message || 'An unexpected error occurred.';
             setMessage({ type: 'error', text: errorMsg });

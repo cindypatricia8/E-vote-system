@@ -105,13 +105,6 @@ const LoginPage: React.FC = () => {
             />
             {errors.password && <p className="error-pass">{errors.password}</p>}
           </div>
-
-          <div className="remember-row">
-            <input 
-            id="remember" 
-            type="checkbox" />
-            <label htmlFor="remember">Remember me</label>
-          </div>
           
           <button type="submit" className="primary-btn" disabled={submitting}>
             {submitting ? 'Signing in...' : 'Sign in'}
