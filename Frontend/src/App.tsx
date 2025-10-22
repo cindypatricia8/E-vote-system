@@ -19,7 +19,7 @@ import UserDashboard from './pages/UserDashboard';
 import RedirectIfAuth from './components/RedirectIfAuth';
 import ProtectedRoute from './components/ProtectedRoute';
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="App">
       <Routes>

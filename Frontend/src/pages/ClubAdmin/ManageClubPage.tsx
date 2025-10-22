@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams,  Link } from "react-router-dom";
 import { useAuth } from "../../context/authContext";
 import
   {
@@ -17,7 +17,6 @@ import "./ClubAdminLayout.css";
 const ManageClubPage: React.FC = () =>
 {
   const { clubId } = useParams<{ clubId: string }>();
-  const navigate = useNavigate();
   const { user: currentUser } = useAuth();
 
   const [club, setClub] = useState<Club | null>(null);
