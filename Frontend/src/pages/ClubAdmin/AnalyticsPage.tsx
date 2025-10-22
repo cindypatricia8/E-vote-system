@@ -144,7 +144,7 @@ const AnalyticsPage: React.FC = () => {
                 {results.map((pos) => {
                   const labels = pos.candidates.map(c => c.name);
                   const data = pos.candidates.map(c => c.voteCount);
-                  const barThickness = 20;
+                  
 
                   return (
                     <div key={pos.positionTitle} style={{ background:"#fff", borderRadius:12, padding:16, boxShadow:"0 1px 4px rgba(0,0,0,.06)", height:200}}>
