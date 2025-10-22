@@ -27,9 +27,11 @@ const App: React.FC = () => {
         {/* UserDashboard with clubs user is in */}
         <Route element={<RedirectIfAuth />}>
           <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<SignUp />} />
+
         </Route>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<SignUp />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<UserDashboard />} /> 
